@@ -1,0 +1,483 @@
+10:07:07 **** Build of configuration Release for project Network ****
+make all 
+Building file: ../src/Director.c
+Invoking: GCC C Compiler
+gcc -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
+2015-05-01 10:07:08.621 xcodebuild[540:28882] [MT] PluginLoading: Required plug-in compatibility UUID 9F75337B-21B4-4ADC-B558-F9CADF7073A7 for plug-in at path '~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/Unity4XC.xcplugin' not present in DVTPlugInCompatibilityUUIDs
+2015-05-01 10:07:09.195 xcodebuild[543:28899] [MT] PluginLoading: Required plug-in compatibility UUID 9F75337B-21B4-4ADC-B558-F9CADF7073A7 for plug-in at path '~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/Unity4XC.xcplugin' not present in DVTPlugInCompatibilityUUIDs
+Finished building: ../src/Director.c
+ 
+Building file: ../src/Network.c
+Invoking: GCC C Compiler
+gcc -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Network.d" -MT"src/Network.d" -o "src/Network.o" "../src/Network.c"
+Finished building: ../src/Network.c
+ 
+Building target: Network
+Invoking: MacOS X C Linker
+gcc  -o "Network"  ./src/Director.o ./src/Network.o   
+duplicate symbol _main in:
+    ./src/Director.o
+    ./src/Network.o
+ld: 1 duplicate symbol for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make: *** [Network] Error 1
+10:19:26 **** Build of configuration Debug for project new ****
+make all 
+Building file: ../src/new.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/new.d" -MT"src/new.d" -o "src/new.o" "../src/new.c"
+Finished building: ../src/new.c
+ 
+Building target: new
+Invoking: MacOS X C Linker
+gcc  -o "new"  ./src/new.o   
+Finished building target: new
+ 
+10:19:33 **** Incremental Build of configuration Debug for project new ****
+make all 
+make: Nothing to be done for `all'.
+10:23:39 **** Build of configuration Debug for project Network ****
+make all 
+Building file: ../src/Director.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
+Finished building: ../src/Director.c
+ 
+Building file: ../src/Network.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Network.d" -MT"src/Network.d" -o "src/Network.o" "../src/Network.c"
+Finished building: ../src/Network.c
+ 
+Building target: Network
+Invoking: MacOS X C Linker
+gcc  -o "Network"  ./src/Director.o ./src/Network.o   
+duplicate symbol _main in:
+    ./src/Director.o
+    ./src/Network.o
+ld: 1 duplicate symbol for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make: *** [Network] Error 1
+10:23:41 **** Incremental Build of configuration Debug for project Network ****
+make all 
+Building target: Network
+Invoking: MacOS X C Linker
+gcc  -o "Network"  ./src/Director.o ./src/Network.o   
+duplicate symbol _main in:
+    ./src/Director.o
+    ./src/Network.o
+ld: 1 duplicate symbol for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make: *** [Network] Error 1
+10:23:58 **** Incremental Build of configuration Debug for project Network ****
+make all 
+Building target: Network
+Invoking: MacOS X C Linker
+gcc  -o "Network"  ./src/Director.o ./src/Network.o   
+duplicate symbol _main in:
+    ./src/Director.o
+    ./src/Network.o
+ld: 1 duplicate symbol for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make: *** [Network] Error 1
+10:24:22 **** Incremental Build of configuration Debug for project Network ****
+make all 
+Building target: Network
+Invoking: MacOS X C Linker
+gcc  -o "Network"  ./src/Director.o ./src/Network.o   
+duplicate symbol _main in:
+    ./src/Director.o
+    ./src/Network.o
+ld: 1 duplicate symbol for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make: *** [Network] Error 1
+10:24:58 **** Build of configuration Debug for project Network ****
+make all 
+Building file: ../src/Network.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Network.d" -MT"src/Network.d" -o "src/Network.o" "../src/Network.c"
+Finished building: ../src/Network.c
+ 
+Building target: Network
+Invoking: MacOS X C Linker
+gcc  -o "Network"  ./src/Network.o   
+Finished building target: Network
+ 
+10:25:02 **** Incremental Build of configuration Debug for project Network ****
+make all 
+make: Nothing to be done for `all'.
+10:25:53 **** Incremental Build of configuration Debug for project Network ****
+make all 
+Building file: ../src/Director.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
+Finished building: ../src/Director.c
+ 
+Building target: Network
+Invoking: MacOS X C Linker
+gcc  -o "Network"  ./src/Director.o ./src/Network.o   
+duplicate symbol _main in:
+    ./src/Director.o
+    ./src/Network.o
+ld: 1 duplicate symbol for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make: *** [Network] Error 1
+10:26:30 **** Incremental Build of configuration Debug for project Network ****
+make all 
+Building file: ../src/Director.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
+Finished building: ../src/Director.c
+ 
+Building target: Network
+Invoking: MacOS X C Linker
+gcc  -o "Network"  ./src/Director.o ./src/Network.o   
+Finished building target: Network
+ 
+10:26:32 **** Incremental Build of configuration Debug for project Network ****
+make all 
+make: Nothing to be done for `all'.
+10:26:36 **** Incremental Build of configuration Debug for project Network ****
+make all 
+make: Nothing to be done for `all'.
+11:23:07 **** Build of configuration Debug for project Director ****
+make all 
+Building file: ../src/Director.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
+2015-05-02 11:23:08.678 xcodebuild[542:25367] [MT] PluginLoading: Required plug-in compatibility UUID 9F75337B-21B4-4ADC-B558-F9CADF7073A7 for plug-in at path '~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/Unity4XC.xcplugin' not present in DVTPlugInCompatibilityUUIDs
+2015-05-02 11:23:09.214 xcodebuild[545:25383] [MT] PluginLoading: Required plug-in compatibility UUID 9F75337B-21B4-4ADC-B558-F9CADF7073A7 for plug-in at path '~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/Unity4XC.xcplugin' not present in DVTPlugInCompatibilityUUIDs
+Finished building: ../src/Director.c
+ 
+Building target: Director
+Invoking: MacOS X C Linker
+gcc  -o "Director"  ./src/Director.o   
+Finished building target: Director
+ 
+11:23:10 **** Incremental Build of configuration Debug for project Network ****
+make all 
+make: Nothing to be done for `all'.
+11:23:19 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+11:23:25 **** Incremental Build of configuration Debug for project Network ****
+make all 
+make: Nothing to be done for `all'.
+11:24:26 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+11:24:26 **** Incremental Build of configuration Debug for project Network ****
+make all 
+Building file: ../src/Network.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Network.d" -MT"src/Network.d" -o "src/Network.o" "../src/Network.c"
+Finished building: ../src/Network.c
+ 
+Building target: Network
+Invoking: MacOS X C Linker
+gcc  -o "Network"  ./src/Director.o ./src/Network.o   
+Finished building target: Network
+ 
+11:24:29 **** Incremental Build of configuration Debug for project Network ****
+make all 
+make: Nothing to be done for `all'.
+11:24:34 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+11:24:45 **** Incremental Build of configuration Debug for project Network ****
+make all 
+make: Nothing to be done for `all'.
+11:25:19 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+11:25:19 **** Incremental Build of configuration Debug for project Network ****
+make all 
+make: Nothing to be done for `all'.
+11:25:22 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+11:25:22 **** Incremental Build of configuration Debug for project Network ****
+make all 
+Building file: ../src/Network.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Network.d" -MT"src/Network.d" -o "src/Network.o" "../src/Network.c"
+Finished building: ../src/Network.c
+ 
+Building target: Network
+Invoking: MacOS X C Linker
+gcc  -o "Network"  ./src/Director.o ./src/Network.o   
+Finished building target: Network
+ 
+11:31:56 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+11:31:56 **** Incremental Build of configuration Debug for project Network ****
+make all 
+Building file: ../src/Network.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Network.d" -MT"src/Network.d" -o "src/Network.o" "../src/Network.c"
+Finished building: ../src/Network.c
+ 
+Building target: Network
+Invoking: MacOS X C Linker
+gcc  -o "Network"  ./src/Director.o ./src/Network.o   
+Finished building target: Network
+ 
+11:32:14 **** Incremental Build of configuration Debug for project Director ****
+make all 
+Building file: ../src/Director.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
+Finished building: ../src/Director.c
+ 
+Building target: Director
+Invoking: MacOS X C Linker
+gcc  -o "Director"  ./src/Director.o   
+Finished building target: Director
+ 
+11:32:14 **** Incremental Build of configuration Debug for project Network ****
+make all 
+make: Nothing to be done for `all'.
+11:32:19 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+11:32:22 **** Incremental Build of configuration Debug for project Network ****
+make all 
+make: Nothing to be done for `all'.
+11:32:27 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+11:40:49 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+11:41:26 **** Incremental Build of configuration Debug for project Network ****
+make all 
+make: Nothing to be done for `all'.
+11:57:47 **** Incremental Build of configuration Debug for project Director ****
+make all 
+Building file: ../src/Collector.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Collector.d" -MT"src/Collector.d" -o "src/Collector.o" "../src/Collector.c"
+Finished building: ../src/Collector.c
+ 
+Building target: Director
+Invoking: MacOS X C Linker
+gcc  -o "Director"  ./src/Collector.o ./src/Director.o   
+duplicate symbol _main in:
+    ./src/Collector.o
+    ./src/Director.o
+ld: 1 duplicate symbol for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+make: *** [Director] Error 1
+11:58:33 **** Incremental Build of configuration Debug for project Director ****
+make all 
+Building file: ../src/Director.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
+Finished building: ../src/Director.c
+ 
+Building target: Director
+Invoking: MacOS X C Linker
+gcc  -o "Director"  ./src/Director.o   
+Finished building target: Director
+ 
+12:12:27 **** Build of configuration Debug for project Analyzer ****
+make all 
+Building file: ../src/Analyzer.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Analyzer.d" -MT"src/Analyzer.d" -o "src/Analyzer.o" "../src/Analyzer.c"
+Finished building: ../src/Analyzer.c
+ 
+Building target: Analyzer
+Invoking: MacOS X C Linker
+gcc  -o "Analyzer"  ./src/Analyzer.o   
+Finished building target: Analyzer
+ 
+12:12:27 **** Build of configuration Debug for project Bank ****
+make all 
+Building file: ../src/Bank.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Bank.d" -MT"src/Bank.d" -o "src/Bank.o" "../src/Bank.c"
+Finished building: ../src/Bank.c
+ 
+Building target: Bank
+Invoking: MacOS X C Linker
+gcc  -o "Bank"  ./src/Bank.o   
+Finished building target: Bank
+ 
+12:12:27 **** Build of configuration Debug for project Collector ****
+make all 
+Building file: ../src/Collector.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Collector.d" -MT"src/Collector.d" -o "src/Collector.o" "../src/Collector.c"
+Finished building: ../src/Collector.c
+ 
+Building target: Collector
+Invoking: MacOS X C Linker
+gcc  -o "Collector"  ./src/Collector.o   
+Finished building target: Collector
+ 
+12:12:28 **** Incremental Build of configuration Debug for project Director ****
+make all 
+Building file: ../src/Director.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
+Finished building: ../src/Director.c
+ 
+Building target: Director
+Invoking: MacOS X C Linker
+gcc  -o "Director"  ./src/Director.o   
+Finished building target: Director
+ 
+12:12:30 **** Incremental Build of configuration Debug for project Analyzer ****
+make all 
+make: Nothing to be done for `all'.
+12:12:30 **** Incremental Build of configuration Debug for project Bank ****
+make all 
+make: Nothing to be done for `all'.
+12:12:30 **** Incremental Build of configuration Debug for project Collector ****
+make all 
+make: Nothing to be done for `all'.
+12:12:30 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+12:12:33 **** Incremental Build of configuration Debug for project Analyzer ****
+make all 
+make: Nothing to be done for `all'.
+12:12:33 **** Incremental Build of configuration Debug for project Bank ****
+make all 
+make: Nothing to be done for `all'.
+12:12:33 **** Incremental Build of configuration Debug for project Collector ****
+make all 
+make: Nothing to be done for `all'.
+12:12:33 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+12:12:36 **** Incremental Build of configuration Debug for project Analyzer ****
+make all 
+make: Nothing to be done for `all'.
+12:12:36 **** Incremental Build of configuration Debug for project Bank ****
+make all 
+make: Nothing to be done for `all'.
+12:12:36 **** Incremental Build of configuration Debug for project Collector ****
+make all 
+make: Nothing to be done for `all'.
+12:12:36 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+12:12:40 **** Incremental Build of configuration Debug for project Analyzer ****
+make all 
+make: Nothing to be done for `all'.
+12:12:40 **** Incremental Build of configuration Debug for project Bank ****
+make all 
+make: Nothing to be done for `all'.
+12:12:40 **** Incremental Build of configuration Debug for project Collector ****
+make all 
+make: Nothing to be done for `all'.
+12:12:40 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+12:14:01 **** Incremental Build of configuration Debug for project Analyzer ****
+make all 
+Building file: ../src/Analyzer.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Analyzer.d" -MT"src/Analyzer.d" -o "src/Analyzer.o" "../src/Analyzer.c"
+Finished building: ../src/Analyzer.c
+ 
+Building target: Analyzer
+Invoking: MacOS X C Linker
+gcc  -o "Analyzer"  ./src/Analyzer.o   
+Finished building target: Analyzer
+ 
+12:14:02 **** Incremental Build of configuration Debug for project Bank ****
+make all 
+Building file: ../src/Bank.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Bank.d" -MT"src/Bank.d" -o "src/Bank.o" "../src/Bank.c"
+Finished building: ../src/Bank.c
+ 
+Building target: Bank
+Invoking: MacOS X C Linker
+gcc  -o "Bank"  ./src/Bank.o   
+Finished building target: Bank
+ 
+12:14:02 **** Incremental Build of configuration Debug for project Collector ****
+make all 
+Building file: ../src/Collector.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Collector.d" -MT"src/Collector.d" -o "src/Collector.o" "../src/Collector.c"
+Finished building: ../src/Collector.c
+ 
+Building target: Collector
+Invoking: MacOS X C Linker
+gcc  -o "Collector"  ./src/Collector.o   
+Finished building target: Collector
+ 
+12:14:02 **** Incremental Build of configuration Debug for project Director ****
+make all 
+Building file: ../src/Director.c
+Invoking: GCC C Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
+Finished building: ../src/Director.c
+ 
+Building target: Director
+Invoking: MacOS X C Linker
+gcc  -o "Director"  ./src/Director.o   
+Finished building target: Director
+ 
+12:14:04 **** Incremental Build of configuration Debug for project Analyzer ****
+make all 
+make: Nothing to be done for `all'.
+12:14:05 **** Incremental Build of configuration Debug for project Bank ****
+make all 
+make: Nothing to be done for `all'.
+12:14:05 **** Incremental Build of configuration Debug for project Collector ****
+make all 
+make: Nothing to be done for `all'.
+12:14:05 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+12:14:09 **** Incremental Build of configuration Debug for project Analyzer ****
+make all 
+make: Nothing to be done for `all'.
+12:14:09 **** Incremental Build of configuration Debug for project Bank ****
+make all 
+make: Nothing to be done for `all'.
+12:14:09 **** Incremental Build of configuration Debug for project Collector ****
+make all 
+make: Nothing to be done for `all'.
+12:14:09 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+12:14:13 **** Incremental Build of configuration Debug for project Analyzer ****
+make all 
+make: Nothing to be done for `all'.
+12:14:13 **** Incremental Build of configuration Debug for project Bank ****
+make all 
+make: Nothing to be done for `all'.
+12:14:13 **** Incremental Build of configuration Debug for project Collector ****
+make all 
+make: Nothing to be done for `all'.
+12:14:13 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+12:21:18 **** Incremental Build of configuration Debug for project Analyzer ****
+make all 
+make: Nothing to be done for `all'.
+12:21:21 **** Incremental Build of configuration Debug for project Analyzer ****
+make all 
+make: Nothing to be done for `all'.
+12:21:25 **** Incremental Build of configuration Debug for project Collector ****
+make all 
+make: Nothing to be done for `all'.
+12:21:29 **** Incremental Build of configuration Debug for project Bank ****
+make all 
+make: Nothing to be done for `all'.
+12:21:34 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+12:21:37 **** Incremental Build of configuration Debug for project Bank ****
+make all 
+make: Nothing to be done for `all'.
+12:21:40 **** Incremental Build of configuration Debug for project Collector ****
+make all 
+make: Nothing to be done for `all'.

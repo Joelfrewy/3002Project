@@ -1,0 +1,6 @@
+12:21:40 **** Incremental Build of configuration Debug for project Collector ****
+make all 
+make: Nothing to be done for `all'.
+
+12:21:40 Build Finished (took 63ms)
+
