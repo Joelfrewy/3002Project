@@ -275,7 +275,7 @@ int main(int argc, char **argv)
  
     /* Main loop */
     while (1) {
-        int size = sizeof(struct sockaddr_in);
+        unsigned int size = sizeof(struct sockaddr_in);
         struct sockaddr_in their_addr;
 	fd_set fdset;
 	
@@ -307,7 +307,7 @@ int main(int argc, char **argv)
 	registered = isregistered(newsockhost, newsockport);
 	//printf("after register\n");
 	if(registered == 0){
-		index = choose(AnalystsPIDTYPE);
+		index = choose();
 		if(index == -1){
 			perror("choose");
 		}
@@ -338,7 +338,8 @@ int main(int argc, char **argv)
 			else if(registered == -1){
 				close(pipefd[0]);
 				unregisteredhandle(newsock, pipefd[1]);
-				wait(1);
+                int i = 1;
+				wait(&i);
 			}
 			//printf("I'm exiting now\n");
          		exit(0);
