@@ -39,8 +39,15 @@
 		<item value="org.eclipse.rse:3.7.0.201502160819"/>
 		<item value="org.eclipse.tm.terminal:3.7.0.201502160819"/>
 	</list>
-	<section name="BasicNewProjectResourceWizard">
+	<section name="CleanDialogSettings">
+		<item value="484" key="DIALOG_WIDTH"/>
+		<item value="false" key="TOGGLE_SELECTED"/>
+		<item value="354" key="DIALOG_HEIGHT"/>
+		<item value="679" key="DIALOG_X_ORIGIN"/>
+		<item value="177" key="DIALOG_Y_ORIGIN"/>
 	</section>
 	<section name="NewWizardAction">
+	</section>
+	<section name="BasicNewProjectResourceWizard">
 	</section>
 </section>

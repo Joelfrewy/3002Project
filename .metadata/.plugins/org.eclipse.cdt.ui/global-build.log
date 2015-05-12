@@ -1,298 +1,160 @@
-10:07:07 **** Build of configuration Release for project Network ****
+14:26:03 **** Build of configuration Debug for project Collector ****
 make all 
-Building file: ../src/Director.c
+Building file: ../src/SSL-Client.c
 Invoking: GCC C Compiler
-gcc -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
-2015-05-01 10:07:08.621 xcodebuild[540:28882] [MT] PluginLoading: Required plug-in compatibility UUID 9F75337B-21B4-4ADC-B558-F9CADF7073A7 for plug-in at path '~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/Unity4XC.xcplugin' not present in DVTPlugInCompatibilityUUIDs
-2015-05-01 10:07:09.195 xcodebuild[543:28899] [MT] PluginLoading: Required plug-in compatibility UUID 9F75337B-21B4-4ADC-B558-F9CADF7073A7 for plug-in at path '~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/Unity4XC.xcplugin' not present in DVTPlugInCompatibilityUUIDs
-Finished building: ../src/Director.c
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -lssl -lcrypto -MMD -MP -MF"src/SSL-Client.d" -MT"src/SSL-Client.d" -o "src/SSL-Client.o" "../src/SSL-Client.c"
+clang: warning: -lssl: 'linker' input unused
+clang: warning: -lcrypto: 'linker' input unused
+../src/SSL-Client.c:126:5: warning: 'OPENSSL_add_all_algorithms_noconf' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+    OpenSSL_add_all_algorithms();  /* Load cryptos, et.al. */
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/evp.h:829:3: note: expanded from macro 'OpenSSL_add_all_algorithms'
+                OPENSSL_add_all_algorithms_noconf()
+                ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/evp.h:821:6: note: 'OPENSSL_add_all_algorithms_noconf' has been explicitly marked deprecated here
+void OPENSSL_add_all_algorithms_noconf(void) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+     ^
+../src/SSL-Client.c:127:5: warning: 'SSL_load_error_strings' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+    SSL_load_error_strings();   /* Bring in and register error messages */
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1432:6: note: 'SSL_load_error_strings' has been explicitly marked deprecated here
+void    SSL_load_error_strings(void ) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+        ^
+../src/SSL-Client.c:128:14: warning: 'SSLv3_client_method' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+    method = SSLv3_client_method();  /* Create new client-method instance */
+             ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1529:13: note: 'SSLv3_client_method' has been explicitly marked deprecated here
+SSL_METHOD *SSLv3_client_method(void) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;    /* SSLv3 */
+            ^
+../src/SSL-Client.c:129:11: warning: 'SSL_CTX_new' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+    ctx = SSL_CTX_new(method);   /* Create new context */
+          ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1362:10: note: 'SSL_CTX_new' has been explicitly marked deprecated here
+SSL_CTX *SSL_CTX_new(SSL_METHOD *meth) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+         ^
+../src/SSL-Client.c:132:9: warning: 'ERR_print_errors_fp' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+        ERR_print_errors_fp(stderr);
+        ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/err.h:287:6: note: 'ERR_print_errors_fp' has been explicitly marked deprecated here
+void ERR_print_errors_fp(FILE *fp) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+     ^
+../src/SSL-Client.c:142:12: warning: 'SSL_get_peer_certificate' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+    cert = SSL_get_peer_certificate(ssl); /* get the server's certificate */
+           ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1466:8: note: 'SSL_get_peer_certificate' has been explicitly marked deprecated here
+X509 *  SSL_get_peer_certificate(const SSL *s) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+        ^
+../src/SSL-Client.c:146:16: warning: 'X509_NAME_oneline' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+        line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
+               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/x509.h:985:9: note: 'X509_NAME_oneline' has been explicitly marked deprecated here
+char *          X509_NAME_oneline(X509_NAME *a,char *buf,int size) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+                ^
+../src/SSL-Client.c:146:34: warning: 'X509_get_subject_name' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+        line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
+                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/x509.h:1014:13: note: 'X509_get_subject_name' has been explicitly marked deprecated here
+X509_NAME *     X509_get_subject_name(X509 *a) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+                ^
+../src/SSL-Client.c:149:16: warning: 'X509_NAME_oneline' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+        line = X509_NAME_oneline(X509_get_issuer_name(cert), 0, 0);
+               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/x509.h:985:9: note: 'X509_NAME_oneline' has been explicitly marked deprecated here
+char *          X509_NAME_oneline(X509_NAME *a,char *buf,int size) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+                ^
+../src/SSL-Client.c:149:34: warning: 'X509_get_issuer_name' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+        line = X509_NAME_oneline(X509_get_issuer_name(cert), 0, 0);
+                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/x509.h:1012:13: note: 'X509_get_issuer_name' has been explicitly marked deprecated here
+X509_NAME *     X509_get_issuer_name(X509 *a) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+                ^
+../src/SSL-Client.c:171:5: warning: 'SSL_library_init' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+    SSL_library_init();
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1569:5: note: 'SSL_library_init' has been explicitly marked deprecated here
+int SSL_library_init(void ) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+    ^
+../src/SSL-Client.c:185:11: warning: 'SSL_new' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+    ssl = SSL_new(ctx);      /* create new SSL connection state */
+          ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1497:7: note: 'SSL_new' has been explicitly marked deprecated here
+SSL *   SSL_new(SSL_CTX *ctx) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+        ^
+../src/SSL-Client.c:186:5: warning: 'SSL_set_fd' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+    SSL_set_fd(ssl, server);    /* attach the socket descriptor */
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1386:5: note: 'SSL_set_fd' has been explicitly marked deprecated here
+int     SSL_set_fd(SSL *s, int fd) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+        ^
+../src/SSL-Client.c:187:10: warning: 'SSL_connect' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+    if ( SSL_connect(ssl) == FAIL )   /* perform the connection */
+         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1508:6: note: 'SSL_connect' has been explicitly marked deprecated here
+int     SSL_connect(SSL *ssl) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+        ^
+../src/SSL-Client.c:188:9: warning: 'ERR_print_errors_fp' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+        ERR_print_errors_fp(stderr);
+        ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/err.h:287:6: note: 'ERR_print_errors_fp' has been explicitly marked deprecated here
+void ERR_print_errors_fp(FILE *fp) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+     ^
+../src/SSL-Client.c:192:50: warning: 'SSL_CIPHER_get_name' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+        printf("Connected with %s encryption\n", SSL_get_cipher(ssl));
+                                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1165:3: note: expanded from macro 'SSL_get_cipher'
+                SSL_CIPHER_get_name(SSL_get_current_cipher(s))
+Finished building: ../src/SSL-Client.c
+                ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1376:14: note: 'SSL_CIPHER_get_name' has been explicitly marked deprecated here
+const char *    SSL_CIPHER_get_name(const SSL_CIPHER *c) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+                ^
+../src/SSL-Client.c:192:50: warning: 'SSL_get_current_cipher' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+        printf("Connected with %s encryption\n", SSL_get_cipher(ssl));
+                                                 ^
  
-Building file: ../src/Network.c
-Invoking: GCC C Compiler
-gcc -O3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Network.d" -MT"src/Network.d" -o "src/Network.o" "../src/Network.c"
-Finished building: ../src/Network.c
- 
-Building target: Network
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1165:23: note: expanded from macro 'SSL_get_cipher'
+                SSL_CIPHER_get_name(SSL_get_current_cipher(s))
+                                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1373:13: note: 'SSL_get_current_cipher' has been explicitly marked deprecated here
+Building target: Collector
+SSL_CIPHER *SSL_get_current_cipher(const SSL *s) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+            ^
+../src/SSL-Client.c:194:9: warning: 'SSL_write' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+        SSL_write(ssl, msg, sizeof(msg));   /* encrypt & send message */
+        ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1511:6: note: 'SSL_write' has been explicitly marked deprecated here
 Invoking: MacOS X C Linker
-gcc  -o "Network"  ./src/Director.o ./src/Network.o   
-duplicate symbol _main in:
-    ./src/Director.o
-    ./src/Network.o
-ld: 1 duplicate symbol for architecture x86_64
-clang: error: linker command failed with exit code 1 (use -v to see invocation)
-make: *** [Network] Error 1
-10:19:26 **** Build of configuration Debug for project new ****
-make all 
-Building file: ../src/new.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/new.d" -MT"src/new.d" -o "src/new.o" "../src/new.c"
-Finished building: ../src/new.c
+int     SSL_write(SSL *ssl,const void *buf,int num) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+        ^
+../src/SSL-Client.c:195:17: warning: 'SSL_read' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+        bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
+                ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1509:6: note: 'SSL_read' has been explicitly marked deprecated here
+int     SSL_read(SSL *ssl,void *buf,int num) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+        ^
+gcc -L/usr/lib -lssl -lcrypto -o "Collector"  ./src/SSL-Client.o   
+../src/SSL-Client.c:198:9: warning: 'SSL_free' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+        SSL_free(ssl);        /* release connection state */
+        ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1506:6: note: 'SSL_free' has been explicitly marked deprecated here
+void    SSL_free(SSL *ssl) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+        ^
+../src/SSL-Client.c:202:5: warning: 'SSL_CTX_free' is deprecated: first deprecated in OS X 10.7 [-Wdeprecated-declarations]
+    SSL_CTX_free(ctx);        /* release context */
+    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk/usr/include/openssl/ssl.h:1363:6: note: 'SSL_CTX_free' has been explicitly marked deprecated here
+void    SSL_CTX_free(SSL_CTX *) DEPRECATED_IN_MAC_OS_X_VERSION_10_7_AND_LATER;
+        ^
+21 warnings generated.
+Finished building target: Collector
  
-Building target: new
-Invoking: MacOS X C Linker
-gcc  -o "new"  ./src/new.o   
-Finished building target: new
- 
-10:19:33 **** Incremental Build of configuration Debug for project new ****
+14:27:37 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-10:23:39 **** Build of configuration Debug for project Network ****
-make all 
-Building file: ../src/Director.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
-Finished building: ../src/Director.c
- 
-Building file: ../src/Network.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Network.d" -MT"src/Network.d" -o "src/Network.o" "../src/Network.c"
-Finished building: ../src/Network.c
- 
-Building target: Network
-Invoking: MacOS X C Linker
-gcc  -o "Network"  ./src/Director.o ./src/Network.o   
-duplicate symbol _main in:
-    ./src/Director.o
-    ./src/Network.o
-ld: 1 duplicate symbol for architecture x86_64
-clang: error: linker command failed with exit code 1 (use -v to see invocation)
-make: *** [Network] Error 1
-10:23:41 **** Incremental Build of configuration Debug for project Network ****
-make all 
-Building target: Network
-Invoking: MacOS X C Linker
-gcc  -o "Network"  ./src/Director.o ./src/Network.o   
-duplicate symbol _main in:
-    ./src/Director.o
-    ./src/Network.o
-ld: 1 duplicate symbol for architecture x86_64
-clang: error: linker command failed with exit code 1 (use -v to see invocation)
-make: *** [Network] Error 1
-10:23:58 **** Incremental Build of configuration Debug for project Network ****
-make all 
-Building target: Network
-Invoking: MacOS X C Linker
-gcc  -o "Network"  ./src/Director.o ./src/Network.o   
-duplicate symbol _main in:
-    ./src/Director.o
-    ./src/Network.o
-ld: 1 duplicate symbol for architecture x86_64
-clang: error: linker command failed with exit code 1 (use -v to see invocation)
-make: *** [Network] Error 1
-10:24:22 **** Incremental Build of configuration Debug for project Network ****
-make all 
-Building target: Network
-Invoking: MacOS X C Linker
-gcc  -o "Network"  ./src/Director.o ./src/Network.o   
-duplicate symbol _main in:
-    ./src/Director.o
-    ./src/Network.o
-ld: 1 duplicate symbol for architecture x86_64
-clang: error: linker command failed with exit code 1 (use -v to see invocation)
-make: *** [Network] Error 1
-10:24:58 **** Build of configuration Debug for project Network ****
-make all 
-Building file: ../src/Network.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Network.d" -MT"src/Network.d" -o "src/Network.o" "../src/Network.c"
-Finished building: ../src/Network.c
- 
-Building target: Network
-Invoking: MacOS X C Linker
-gcc  -o "Network"  ./src/Network.o   
-Finished building target: Network
- 
-10:25:02 **** Incremental Build of configuration Debug for project Network ****
+14:28:01 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-10:25:53 **** Incremental Build of configuration Debug for project Network ****
-make all 
-Building file: ../src/Director.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
-Finished building: ../src/Director.c
- 
-Building target: Network
-Invoking: MacOS X C Linker
-gcc  -o "Network"  ./src/Director.o ./src/Network.o   
-duplicate symbol _main in:
-    ./src/Director.o
-    ./src/Network.o
-ld: 1 duplicate symbol for architecture x86_64
-clang: error: linker command failed with exit code 1 (use -v to see invocation)
-make: *** [Network] Error 1
-10:26:30 **** Incremental Build of configuration Debug for project Network ****
-make all 
-Building file: ../src/Director.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
-Finished building: ../src/Director.c
- 
-Building target: Network
-Invoking: MacOS X C Linker
-gcc  -o "Network"  ./src/Director.o ./src/Network.o   
-Finished building target: Network
- 
-10:26:32 **** Incremental Build of configuration Debug for project Network ****
-make all 
-make: Nothing to be done for `all'.
-10:26:36 **** Incremental Build of configuration Debug for project Network ****
-make all 
-make: Nothing to be done for `all'.
-11:23:07 **** Build of configuration Debug for project Director ****
-make all 
-Building file: ../src/Director.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
-2015-05-02 11:23:08.678 xcodebuild[542:25367] [MT] PluginLoading: Required plug-in compatibility UUID 9F75337B-21B4-4ADC-B558-F9CADF7073A7 for plug-in at path '~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/Unity4XC.xcplugin' not present in DVTPlugInCompatibilityUUIDs
-2015-05-02 11:23:09.214 xcodebuild[545:25383] [MT] PluginLoading: Required plug-in compatibility UUID 9F75337B-21B4-4ADC-B558-F9CADF7073A7 for plug-in at path '~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/Unity4XC.xcplugin' not present in DVTPlugInCompatibilityUUIDs
-Finished building: ../src/Director.c
- 
-Building target: Director
-Invoking: MacOS X C Linker
-gcc  -o "Director"  ./src/Director.o   
-Finished building target: Director
- 
-11:23:10 **** Incremental Build of configuration Debug for project Network ****
-make all 
-make: Nothing to be done for `all'.
-11:23:19 **** Incremental Build of configuration Debug for project Director ****
-make all 
-make: Nothing to be done for `all'.
-11:23:25 **** Incremental Build of configuration Debug for project Network ****
-make all 
-make: Nothing to be done for `all'.
-11:24:26 **** Incremental Build of configuration Debug for project Director ****
-make all 
-make: Nothing to be done for `all'.
-11:24:26 **** Incremental Build of configuration Debug for project Network ****
-make all 
-Building file: ../src/Network.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Network.d" -MT"src/Network.d" -o "src/Network.o" "../src/Network.c"
-Finished building: ../src/Network.c
- 
-Building target: Network
-Invoking: MacOS X C Linker
-gcc  -o "Network"  ./src/Director.o ./src/Network.o   
-Finished building target: Network
- 
-11:24:29 **** Incremental Build of configuration Debug for project Network ****
-make all 
-make: Nothing to be done for `all'.
-11:24:34 **** Incremental Build of configuration Debug for project Director ****
-make all 
-make: Nothing to be done for `all'.
-11:24:45 **** Incremental Build of configuration Debug for project Network ****
-make all 
-make: Nothing to be done for `all'.
-11:25:19 **** Incremental Build of configuration Debug for project Director ****
-make all 
-make: Nothing to be done for `all'.
-11:25:19 **** Incremental Build of configuration Debug for project Network ****
-make all 
-make: Nothing to be done for `all'.
-11:25:22 **** Incremental Build of configuration Debug for project Director ****
-make all 
-make: Nothing to be done for `all'.
-11:25:22 **** Incremental Build of configuration Debug for project Network ****
-make all 
-Building file: ../src/Network.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Network.d" -MT"src/Network.d" -o "src/Network.o" "../src/Network.c"
-Finished building: ../src/Network.c
- 
-Building target: Network
-Invoking: MacOS X C Linker
-gcc  -o "Network"  ./src/Director.o ./src/Network.o   
-Finished building target: Network
- 
-11:31:56 **** Incremental Build of configuration Debug for project Director ****
-make all 
-make: Nothing to be done for `all'.
-11:31:56 **** Incremental Build of configuration Debug for project Network ****
-make all 
-Building file: ../src/Network.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Network.d" -MT"src/Network.d" -o "src/Network.o" "../src/Network.c"
-Finished building: ../src/Network.c
- 
-Building target: Network
-Invoking: MacOS X C Linker
-gcc  -o "Network"  ./src/Director.o ./src/Network.o   
-Finished building target: Network
- 
-11:32:14 **** Incremental Build of configuration Debug for project Director ****
-make all 
-Building file: ../src/Director.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
-Finished building: ../src/Director.c
- 
-Building target: Director
-Invoking: MacOS X C Linker
-gcc  -o "Director"  ./src/Director.o   
-Finished building target: Director
- 
-11:32:14 **** Incremental Build of configuration Debug for project Network ****
-make all 
-make: Nothing to be done for `all'.
-11:32:19 **** Incremental Build of configuration Debug for project Director ****
-make all 
-make: Nothing to be done for `all'.
-11:32:22 **** Incremental Build of configuration Debug for project Network ****
-make all 
-make: Nothing to be done for `all'.
-11:32:27 **** Incremental Build of configuration Debug for project Director ****
-make all 
-make: Nothing to be done for `all'.
-11:40:49 **** Incremental Build of configuration Debug for project Director ****
-make all 
-make: Nothing to be done for `all'.
-11:41:26 **** Incremental Build of configuration Debug for project Network ****
-make all 
-make: Nothing to be done for `all'.
-11:57:47 **** Incremental Build of configuration Debug for project Director ****
-make all 
-Building file: ../src/Collector.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Collector.d" -MT"src/Collector.d" -o "src/Collector.o" "../src/Collector.c"
-Finished building: ../src/Collector.c
- 
-Building target: Director
-Invoking: MacOS X C Linker
-gcc  -o "Director"  ./src/Collector.o ./src/Director.o   
-duplicate symbol _main in:
-    ./src/Collector.o
-    ./src/Director.o
-ld: 1 duplicate symbol for architecture x86_64
-clang: error: linker command failed with exit code 1 (use -v to see invocation)
-make: *** [Director] Error 1
-11:58:33 **** Incremental Build of configuration Debug for project Director ****
-make all 
-Building file: ../src/Director.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
-Finished building: ../src/Director.c
- 
-Building target: Director
-Invoking: MacOS X C Linker
-gcc  -o "Director"  ./src/Director.o   
-Finished building target: Director
- 
-12:12:27 **** Build of configuration Debug for project Analyzer ****
-make all 
-Building file: ../src/Analyzer.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Analyzer.d" -MT"src/Analyzer.d" -o "src/Analyzer.o" "../src/Analyzer.c"
-Finished building: ../src/Analyzer.c
- 
-Building target: Analyzer
-Invoking: MacOS X C Linker
-gcc  -o "Analyzer"  ./src/Analyzer.o   
-Finished building target: Analyzer
- 
-12:12:27 **** Build of configuration Debug for project Bank ****
+14:28:02 **** Build of configuration Debug for project Bank ****
 make all 
 Building file: ../src/Bank.c
 Invoking: GCC C Compiler
@@ -304,180 +166,178 @@ Invoking: MacOS X C Linker
 gcc  -o "Bank"  ./src/Bank.o   
 Finished building target: Bank
  
-12:12:27 **** Build of configuration Debug for project Collector ****
-make all 
-Building file: ../src/Collector.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Collector.d" -MT"src/Collector.d" -o "src/Collector.o" "../src/Collector.c"
-Finished building: ../src/Collector.c
- 
-Building target: Collector
-Invoking: MacOS X C Linker
-gcc  -o "Collector"  ./src/Collector.o   
-Finished building target: Collector
- 
-12:12:28 **** Incremental Build of configuration Debug for project Director ****
-make all 
-Building file: ../src/Director.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
-Finished building: ../src/Director.c
- 
-Building target: Director
-Invoking: MacOS X C Linker
-gcc  -o "Director"  ./src/Director.o   
-Finished building target: Director
- 
-12:12:30 **** Incremental Build of configuration Debug for project Analyzer ****
+14:28:02 **** Incremental Build of configuration Debug for project Collector ****
 make all 
 make: Nothing to be done for `all'.
-12:12:30 **** Incremental Build of configuration Debug for project Bank ****
+14:28:02 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:12:30 **** Incremental Build of configuration Debug for project Collector ****
+14:28:51 **** Incremental Build of configuration Debug for project Collector ****
 make all 
 make: Nothing to be done for `all'.
-12:12:30 **** Incremental Build of configuration Debug for project Director ****
+14:30:06 **** Incremental Build of configuration Debug for project Collector ****
 make all 
 make: Nothing to be done for `all'.
-12:12:33 **** Incremental Build of configuration Debug for project Analyzer ****
+14:30:15 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-12:12:33 **** Incremental Build of configuration Debug for project Bank ****
+14:30:19 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:12:33 **** Incremental Build of configuration Debug for project Collector ****
+14:34:15 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:12:33 **** Incremental Build of configuration Debug for project Director ****
+14:34:25 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:12:36 **** Incremental Build of configuration Debug for project Analyzer ****
+14:34:40 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:12:36 **** Incremental Build of configuration Debug for project Bank ****
+14:36:02 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:12:36 **** Incremental Build of configuration Debug for project Collector ****
+14:38:27 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-12:12:36 **** Incremental Build of configuration Debug for project Director ****
+14:38:28 **** Incremental Build of configuration Debug for project Bank ****
 make all 
 make: Nothing to be done for `all'.
-12:12:40 **** Incremental Build of configuration Debug for project Analyzer ****
+14:38:28 **** Incremental Build of configuration Debug for project Collector ****
 make all 
 make: Nothing to be done for `all'.
-12:12:40 **** Incremental Build of configuration Debug for project Bank ****
+14:38:28 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:12:40 **** Incremental Build of configuration Debug for project Collector ****
+14:38:44 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:12:40 **** Incremental Build of configuration Debug for project Director ****
+14:40:15 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:14:01 **** Incremental Build of configuration Debug for project Analyzer ****
-make all 
-Building file: ../src/Analyzer.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Analyzer.d" -MT"src/Analyzer.d" -o "src/Analyzer.o" "../src/Analyzer.c"
-Finished building: ../src/Analyzer.c
- 
-Building target: Analyzer
-Invoking: MacOS X C Linker
-gcc  -o "Analyzer"  ./src/Analyzer.o   
-Finished building target: Analyzer
- 
-12:14:02 **** Incremental Build of configuration Debug for project Bank ****
-make all 
-Building file: ../src/Bank.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Bank.d" -MT"src/Bank.d" -o "src/Bank.o" "../src/Bank.c"
-Finished building: ../src/Bank.c
- 
-Building target: Bank
-Invoking: MacOS X C Linker
-gcc  -o "Bank"  ./src/Bank.o   
-Finished building target: Bank
- 
-12:14:02 **** Incremental Build of configuration Debug for project Collector ****
-make all 
-Building file: ../src/Collector.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Collector.d" -MT"src/Collector.d" -o "src/Collector.o" "../src/Collector.c"
-Finished building: ../src/Collector.c
- 
-Building target: Collector
-Invoking: MacOS X C Linker
-gcc  -o "Collector"  ./src/Collector.o   
-Finished building target: Collector
- 
-12:14:02 **** Incremental Build of configuration Debug for project Director ****
-make all 
-Building file: ../src/Director.c
-Invoking: GCC C Compiler
-gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/Director.d" -MT"src/Director.d" -o "src/Director.o" "../src/Director.c"
-Finished building: ../src/Director.c
- 
-Building target: Director
-Invoking: MacOS X C Linker
-gcc  -o "Director"  ./src/Director.o   
-Finished building target: Director
- 
-12:14:04 **** Incremental Build of configuration Debug for project Analyzer ****
+14:40:34 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:14:05 **** Incremental Build of configuration Debug for project Bank ****
+14:43:11 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:14:05 **** Incremental Build of configuration Debug for project Collector ****
+14:43:24 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-12:14:05 **** Incremental Build of configuration Debug for project Director ****
+14:47:33 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-12:14:09 **** Incremental Build of configuration Debug for project Analyzer ****
+14:48:45 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-12:14:09 **** Incremental Build of configuration Debug for project Bank ****
+14:48:45 **** Incremental Build of configuration Debug for project Bank ****
 make all 
 make: Nothing to be done for `all'.
-12:14:09 **** Incremental Build of configuration Debug for project Collector ****
+14:48:45 **** Incremental Build of configuration Debug for project Collector ****
 make all 
 make: Nothing to be done for `all'.
-12:14:09 **** Incremental Build of configuration Debug for project Director ****
+14:48:46 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:14:13 **** Incremental Build of configuration Debug for project Analyzer ****
+14:57:52 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:14:13 **** Incremental Build of configuration Debug for project Bank ****
+14:58:03 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-12:14:13 **** Incremental Build of configuration Debug for project Collector ****
+14:58:42 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-12:14:13 **** Incremental Build of configuration Debug for project Director ****
+14:58:58 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-12:21:18 **** Incremental Build of configuration Debug for project Analyzer ****
+15:54:12 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-12:21:21 **** Incremental Build of configuration Debug for project Analyzer ****
+16:19:43 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:21:25 **** Incremental Build of configuration Debug for project Collector ****
+16:19:50 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-12:21:29 **** Incremental Build of configuration Debug for project Bank ****
+16:26:00 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:21:34 **** Incremental Build of configuration Debug for project Director ****
+16:26:03 **** Incremental Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
-12:21:37 **** Incremental Build of configuration Debug for project Bank ****
+16:26:09 **** Incremental Build of configuration Debug for project Analyzer ****
 make all 
 make: Nothing to be done for `all'.
-12:21:40 **** Incremental Build of configuration Debug for project Collector ****
+16:34:13 **** Build of configuration Debug for project Director ****
 make all 
 make: Nothing to be done for `all'.
+16:34:17 **** Build of configuration Debug for project Analyzer ****
+make all 
+make: Nothing to be done for `all'.
+16:38:26 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+16:39:28 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+16:39:31 **** Incremental Build of configuration Debug for project Analyzer ****
+make all 
+make: Nothing to be done for `all'.
+17:25:18 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+17:25:24 **** Incremental Build of configuration Debug for project Analyzer ****
+make all 
+make: Nothing to be done for `all'.
+17:26:24 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+17:27:28 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+
+**** Build of configuration Debug for project Analyzer ****
+
+Nothing to build for project Analyzer
+
+**** Build of configuration Debug for project Analyzer ****
+
+Nothing to build for project Analyzer
+
+**** Build of configuration Debug for project Analyzer ****
+
+Nothing to build for project Analyzer
+
+**** Build of configuration Debug for project Analyzer ****
+
+Nothing to build for project Analyzer
+
+**** Build of configuration Debug for project Analyzer ****
+
+Nothing to build for project Analyzer
+
+**** Build of configuration Debug for project Analyzer ****
+
+Nothing to build for project Analyzer
+
+**** Build of configuration Debug for project Analyzer ****
+
+Nothing to build for project Analyzer
+
+**** Build of configuration Debug for project Analyzer ****
+
+Nothing to build for project Analyzer
+17:31:17 **** Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+
+**** Build of configuration Debug for project Analyzer ****
+
+Nothing to build for project Analyzer
+17:31:54 **** Incremental Build of configuration Debug for project Director ****
+make all 
+make: Nothing to be done for `all'.
+
+**** Build of configuration Debug for project Analyzer ****
+
+Nothing to build for project Analyzer
