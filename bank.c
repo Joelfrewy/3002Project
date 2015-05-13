@@ -146,10 +146,6 @@ int main(int argc, char *argv[])
     SSL_CTX *ctx;
     int server, localport;
  
-    if(!isRoot()){
-        printf("This program must be run as root/sudo user!!");
-        exit(0);
-    }
     if ( argc < 1 ){
         printf("Usage:server localport \n");
         exit(0);

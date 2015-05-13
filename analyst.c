@@ -280,10 +280,6 @@ int main(int argc, char *argv[])
     char *proxyhost;
     char *bankhost;
     
-    if(!isRoot()){
-        printf("This program must be run as root/sudo user!!");
-        exit(0);
-    }
     if ( argc < 6 ){
         printf("Usage:server listenport connectport proxyhost proxyport bankhost bankport\n");
         exit(0);
