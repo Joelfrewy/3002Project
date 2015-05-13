@@ -4,7 +4,6 @@
 #include <netdb.h>
 #include <errno.h>
 #include <unistd.h>
-#include <malloc.h>
 #include <string.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -118,7 +117,6 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
 {   char buf[1024];
     char reply[1024];
     int sd, bytes;
-    const char* HTMLecho="<html><body><pre>%s</pre></body></html>\n\n";
  
     if ( SSL_accept(ssl) == FAIL )     /* do SSL-protocol accept */
         ERR_print_errors_fp(stderr);
