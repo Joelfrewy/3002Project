@@ -157,49 +157,59 @@ void ShowCerts(SSL* ssl)
  
 int main(int argc, char *argv[])
 {   SSL_CTX *ctx;
-    int server, localport, proxyport;
+    int server, localport, proxyport, bankport;
+    int i = 0;
     SSL *ssl;
     char buf[1024];
     int bytes;
     char *proxyhost;
- 
-    if ( argc <3 )
+    char *bankhost;
+    
+    if ( argc <5 )
     {
-        printf("usage: localport proxyhost proxyport \n");
+        printf("usage: localport proxyhost proxyport bankhost bankport \n");
         exit(0);
     }
     SSL_library_init();
     localport=atoi(argv[1]);
     proxyhost=argv[2];
     proxyport = atoi(argv[3]);
+    bankhost = argv[4];
+    bankport = atoi(argv[5]);
     registrationrequest(localport, proxyhost, proxyport);
-
+    
     while(1){
-    char msg[1024];
-    bzero(msg,1024);
-    printf("Here is your message: ");
-    fgets(msg,1024,stdin);
-
-    ctx = InitCTX();
-    server = OpenConnection(proxyhost, localport, proxyport);
-    ssl = SSL_new(ctx);      /* create new SSL connection state */
-    SSL_set_fd(ssl, server);    /* attach the socket descriptor */
-    if ( SSL_connect(ssl) == FAIL )   /* perform the connection */
-        ERR_print_errors_fp(stderr);
-    else
-    {   
- 
-        printf("Connected with %s encryption\n", SSL_get_cipher(ssl));
-        ShowCerts(ssl);        /* get any certs */
-        SSL_write(ssl, msg, sizeof(msg));   /* encrypt & send message */
-        bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
-        buf[bytes] = 0;
-        printf("Received message from Server: %s\n", buf);
-        SSL_free(ssl);        /* release connection state */
-    }
-    sleep(1);
-    close(server);         /* close socket */
-    SSL_CTX_free(ctx);        /* release context */
+        char msg[1024];
+        bzero(msg,1024);
+        printf("Here is your message: ");
+        fgets(msg,1024,stdin);
+        
+        ctx = InitCTX();
+        if(i == 0){
+            server = OpenConnection(bankhost, localport, bankport);
+        }
+        else{
+            server = OpenConnection(proxyhost, localport, proxyport);
+        }
+        ssl = SSL_new(ctx);      /* create new SSL connection state */
+        SSL_set_fd(ssl, server);    /* attach the socket descriptor */
+        if ( SSL_connect(ssl) == FAIL )   /* perform the connection */
+            ERR_print_errors_fp(stderr);
+        else
+        {
+            
+            printf("Connected with %s encryption\n", SSL_get_cipher(ssl));
+            ShowCerts(ssl);        /* get any certs */
+            SSL_write(ssl, msg, sizeof(msg));   /* encrypt & send message */
+            bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
+            buf[bytes] = 0;
+            printf("Received message from Server: %s\n", buf);
+            SSL_free(ssl);        /* release connection state */
+        }
+        sleep(1);
+        close(server);         /* close socket */
+        SSL_CTX_free(ctx);        /* release context */
+        i++;
     }
     return 0;
 }
