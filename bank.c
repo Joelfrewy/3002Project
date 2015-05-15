@@ -14,7 +14,8 @@
 #include "openssl/err.h"
  
 #define FAIL    -1
- 
+
+
 int OpenListener(int port)
 {   int sd;
     struct sockaddr_in addr;

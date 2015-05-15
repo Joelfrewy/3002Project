@@ -10,7 +10,50 @@
 #include <openssl/err.h>
  
 #define FAIL    -1
- 
+
+
+//returns and removes first ecent from ecent.txt
+char * geteCent(){
+    if( access( "ecents.txt", F_OK ) == -1 ) {  //check if ecents.txt exists
+        return "";
+    }
+    int i = 0;
+    char line[80];
+    char *ecent = malloc(80);
+    FILE *fr;
+    FILE *fw;
+    fr = fopen ("ecents.txt", "rt");
+    fw = fopen ("newecents.txt", "wt");
+    while(fgets(line, 80, fr) != NULL)
+    {
+        if(i == 0){
+            strcpy(ecent, line);
+        }
+        else{
+            fprintf(fw,"%s", line);
+        }
+        i++;
+    }
+    fclose(fw);
+    fclose(fr);
+    rename("newecents.txt", "ecents.txt");
+    return ecent;
+}
+
+//prints string of ecents separated by spaces into file "ecents.txt"
+void puteCents(char* ecents){
+    char *ecentscpy = malloc(1000);
+    strcpy(ecentscpy, ecents);
+    FILE *fw;
+    fw = fopen ("ecents.txt", "wt");
+    char* line = strtok(ecentscpy, " ");
+    while (line) {
+        fprintf(fw,"%s\n", line);
+        line = strtok(NULL, " ");
+    }
+    fclose(fw);
+}
+
 void registrationrequest(int localport, char* proxyhost, int proxyport ){
    int sockfd;
    struct sockaddr_in local_addr, proxy_addr;
@@ -156,7 +199,10 @@ void ShowCerts(SSL* ssl)
 }
  
 int main(int argc, char *argv[])
-{   SSL_CTX *ctx;
+{
+
+    geteCent();
+    SSL_CTX *ctx;
     int server, localport, proxyport, bankport;
     int i = 0;
     SSL *ssl;
