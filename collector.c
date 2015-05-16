@@ -19,7 +19,7 @@ char * geteCent(){
     }
     int i = 0;
     char line[80];
-    char *ecent = malloc(80);
+    char *ecent = malloc(33);
     FILE *fr;
     FILE *fw;
     fr = fopen ("ecents.txt", "rt");
@@ -34,6 +34,7 @@ char * geteCent(){
         }
         i++;
     }
+    ecent[32] = '\0';
     fclose(fw);
     fclose(fr);
     rename("newecents.txt", "ecents.txt");
@@ -231,9 +232,17 @@ int main(int argc, char *argv[])
             sprintf(msg,"%c%i",'0',5);
         }
         else{
-            printf("Here is your message: ");
+            printf("press enter to generate solution: ");
             fgets(msg,1024,stdin);
-            server = OpenConnection(proxyhost, localport, proxyport);
+            strcpy(msg, geteCent());
+            printf("%lu\n", strlen(msg));
+            if(strlen(msg) != 32){
+                printf("no eCents\n");
+            }
+            else {
+                strcat(msg, "70 25 98 76 3 2");
+                server = OpenConnection(proxyhost, localport, proxyport);
+            }
         }
         ssl = SSL_new(ctx);      /* create new SSL connection state */
         SSL_set_fd(ssl, server);    /* attach the socket descriptor */
@@ -242,6 +251,7 @@ int main(int argc, char *argv[])
         else
         {
             printf("Connected with %s encryption\n", SSL_get_cipher(ssl));
+            printf("sending %s\n", msg);
             ShowCerts(ssl);        /* get any certs */
             SSL_write(ssl, msg, sizeof(msg));   /* encrypt & send message */
             bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */

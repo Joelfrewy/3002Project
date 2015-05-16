@@ -217,9 +217,24 @@ void ShowCerts(SSL* ssl)
     else
         printf("No certificates.\n");
 }
- 
+
+char * Analyze(char *data)
+{
+    char *solution = malloc(1000);
+    char* line = strtok(data, " ");
+    while (line) {
+        if(atoi(line)>50)
+            strcat(solution, "1");
+        else
+            strcat(solution, "0");
+        line = strtok(NULL, " ");
+    }
+    return solution;
+}
+
 void Servlet(SSL *ssl,SSL *ssl2, int client, int bank) /* Serve the connection -- threadable */
-{   char bufclient[1024];
+{
+    char bufclient[1024];
     char sendtobank[1024];
     char replyclient[1024];
     char replybank[1024];
@@ -241,13 +256,17 @@ void Servlet(SSL *ssl,SSL *ssl2, int client, int bank) /* Serve the connection -
         {
             bufclient[bytes1] = 0;
             printf("Received message from Collector: %s\n", bufclient);
+            char *ecent = malloc(33);
+            memcpy(ecent,bufclient, 32);
+            ecent[32] = '\0';
+            sprintf(sendtobank,"%c%s", '1',ecent);
+            memmove(bufclient, bufclient+32, strlen(bufclient));
+            printf("%s\n", bufclient);
             if (SSL_connect(ssl2) == FAIL){
                 printf("SSL_connect fail\n");
                 ERR_print_errors_fp(stderr);
             }
             //sprintf(reply, HTMLecho, buf);   /* construct reply */
-            strcpy(sendtobank, "From Collector: ");
-            strcat(sendtobank, bufclient);
             ShowCerts(ssl2);
             printf("Sending Message to Bank: %s\n", sendtobank);
             SSL_write(ssl2, sendtobank, sizeof(sendtobank));
@@ -260,8 +279,15 @@ void Servlet(SSL *ssl,SSL *ssl2, int client, int bank) /* Serve the connection -
                 ERR_print_errors_fp(stderr);
             }
             SSL_free(ssl2);
-            printf("Here is your message to Collector: ");
-            fgets(replyclient, 1024, stdin);
+            if(strcmp(replybank,"") == 0){
+                strcpy(replyclient, "invalid ecent");
+            }
+            else {
+                char * data = malloc(1024);
+                sprintf(data,"%s", bufclient);
+                strcpy(replyclient, Analyze(data));
+                printf("send to client: %s\n", replyclient);
+            }
             SSL_write(ssl, replyclient, strlen(replyclient)); /* send reply */
         }
         else
