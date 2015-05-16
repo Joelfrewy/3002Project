@@ -200,8 +200,6 @@ void ShowCerts(SSL* ssl)
  
 int main(int argc, char *argv[])
 {
-
-    geteCent();
     SSL_CTX *ctx;
     int server, localport, proxyport, bankport;
     int i = 0;
@@ -227,14 +225,14 @@ int main(int argc, char *argv[])
     while(1){
         char msg[1024];
         bzero(msg,1024);
-        printf("Here is your message: ");
-        fgets(msg,1024,stdin);
-        
         ctx = InitCTX();
         if(i == 0){
             server = OpenConnection(bankhost, localport, bankport);
+            sprintf(msg,"%c%i",'0',5);
         }
         else{
+            printf("Here is your message: ");
+            fgets(msg,1024,stdin);
             server = OpenConnection(proxyhost, localport, proxyport);
         }
         ssl = SSL_new(ctx);      /* create new SSL connection state */
@@ -243,13 +241,15 @@ int main(int argc, char *argv[])
             ERR_print_errors_fp(stderr);
         else
         {
-            
             printf("Connected with %s encryption\n", SSL_get_cipher(ssl));
             ShowCerts(ssl);        /* get any certs */
             SSL_write(ssl, msg, sizeof(msg));   /* encrypt & send message */
             bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
             buf[bytes] = 0;
-            printf("Received message from Server: %s\n", buf);
+            if(i == 0)
+                puteCents(buf);
+            else
+                printf("Received message from Server: %s\n", buf);
             SSL_free(ssl);        /* release connection state */
         }
         sleep(1);

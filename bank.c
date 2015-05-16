@@ -12,7 +12,7 @@
 #include <resolv.h>
 #include "openssl/ssl.h"
 #include "openssl/err.h"
- 
+#include <stdbool.h>
 #define FAIL    -1
 
 
@@ -113,9 +113,57 @@ void ShowCerts(SSL* ssl)
     else
         printf("No certificates.\n");
 }
- 
+
+
+char * createeCents(int ecentnum){
+    char * ecents = malloc(ecentnum*33);
+    char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    FILE *fw;
+    fw = fopen ("bankecents.txt", "a");
+    while(ecentnum > 0)
+    {
+        char * ecent = malloc(32);
+        for (int n = 0; n < 32; n++) {
+            int key = rand() % (int) (sizeof charset - 1);
+            ecent[n] = charset[key];
+        }
+        fprintf(fw,"%s\n", ecent);
+        sprintf(ecents,"%s%s ", ecents, ecent);
+        ecentnum--;
+    }
+    fclose(fw);
+    return ecents;
+}
+
+char * verifyeCent(char *ecent){
+    bool verified = false;
+    char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    char line[80];
+    FILE *fr;
+    FILE *fw;
+    fr = fopen ("bankecents.txt", "rt");
+    fw = fopen ("newbankecents.txt", "wt");
+    while(fgets(line, 80, fr) != NULL)
+    {
+        if(strcmp(ecent, line) == 0){
+            verified = true;
+        }
+        else{
+            fprintf(fw,"%s", line);
+        }
+    }
+    fclose(fw);
+    fclose(fr);
+    rename("newbankecents.txt", "bankecents.txt");
+    if(verified)
+        return createeCents(1);
+    else
+        return "";
+}
+
 void Servlet(SSL* ssl) /* Serve the connection -- threadable */
-{   char buf[1024];
+{
+    char buf[1024];
     char reply[1024];
     int sd, bytes;
  
@@ -128,10 +176,20 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
         if ( bytes > 0 )
         {
             buf[bytes] = 0;
+            char action = buf[0];
+            memmove(buf, buf+1, strlen(buf));
             printf("Received message from Client: %s\n", buf);
+            if(action == '0'){
+                int ecentnum = atoi(buf);
+                strcpy(reply, createeCents(ecentnum));
+            }
+            if(action == '1'){
+                char* ecent = malloc(32);
+                strcpy(ecent, buf);
+                strcpy(reply, verifyeCent(ecent));
+            }
             //sprintf(reply, HTMLecho, buf);   /* construct reply */
 	    printf("Here is your message: ");
-	    fgets(reply, 1024, stdin); 
             SSL_write(ssl, reply, strlen(reply)); /* send reply */
         }
         else
@@ -143,16 +201,15 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
 }
  
 int main(int argc, char *argv[])
-{   
+{
     SSL_CTX *ctx;
     int server, localport;
  
-    if ( argc < 1 ){
+    if ( argc <= 1 ){
         printf("Usage:server localport \n");
         exit(0);
     }
     SSL_library_init();
- 
     localport = atoi(argv[1]);
     ctx = InitServerCTX();        /* initialize SSL */
     LoadCertificates(ctx, "mycert2.pem", "mycert2.pem"); /* load certs */
