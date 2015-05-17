@@ -46,7 +46,7 @@ void puteCents(char* ecents){
     char *ecentscpy = malloc(1000);
     strcpy(ecentscpy, ecents);
     FILE *fw;
-    fw = fopen ("ecents.txt", "wt");
+    fw = fopen ("ecents.txt", "a");
     char* line = strtok(ecentscpy, " ");
     while (line) {
         fprintf(fw,"%s\n", line);
@@ -198,9 +198,14 @@ void ShowCerts(SSL* ssl)
     else
         printf("No certificates.\n");
 }
- 
+
+char *getData(){
+    return "70 67 2 4 98";
+}
+
 int main(int argc, char *argv[])
 {
+    remove("ecents.txt");
     SSL_CTX *ctx;
     int server, localport, proxyport, bankport;
     int i = 0;
@@ -222,14 +227,33 @@ int main(int argc, char *argv[])
     bankhost = argv[4];
     bankport = atoi(argv[5]);
     registrationrequest(localport, proxyhost, proxyport);
+    int remainingecents = -1;
     
     while(1){
+        printf("remainingecents: %i\n", remainingecents);
         char msg[1024];
         bzero(msg,1024);
         ctx = InitCTX();
+        int j = 0;
         if(i == 0){
             server = OpenConnection(bankhost, localport, bankport);
-            sprintf(msg,"%c%i",'0',5);
+            if(remainingecents == -1){
+                printf("request number of ecents: ");
+                char ecentreq[4];
+                fgets(ecentreq,4,stdin);
+                remainingecents = atoi(ecentreq);
+            }
+            printf("remainingecents: %i\n", remainingecents);
+            if(remainingecents > 30){
+                remainingecents -= 30;
+                printf("remainingecents: %i\n", remainingecents);
+                sprintf(msg,"%c%i",'0',30);
+            }
+            else{
+                sprintf(msg,"%c%i",'0',remainingecents);
+                remainingecents = 0;
+                j = 1;
+            }
         }
         else{
             printf("press enter to generate solution: ");
@@ -240,9 +264,10 @@ int main(int argc, char *argv[])
                 printf("no eCents\n");
             }
             else {
-                strcat(msg, "70 25 98 76 3 2");
+                strcat(msg, getData());
                 server = OpenConnection(proxyhost, localport, proxyport);
             }
+            j = 1;
         }
         ssl = SSL_new(ctx);      /* create new SSL connection state */
         SSL_set_fd(ssl, server);    /* attach the socket descriptor */
@@ -264,7 +289,7 @@ int main(int argc, char *argv[])
         sleep(1);
         close(server);         /* close socket */
         SSL_CTX_free(ctx);        /* release context */
-        i++;
+        i += j;
     }
     return 0;
 }
