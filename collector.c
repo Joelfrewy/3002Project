@@ -256,10 +256,9 @@ int main(int argc, char *argv[])
             SSL_write(ssl, msg, sizeof(msg));   /* encrypt & send message */
             bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
             buf[bytes] = 0;
+            printf("Received message from Server: %s\n", buf);
             if(i == 0)
                 puteCents(buf);
-            else
-                printf("Received message from Server: %s\n", buf);
             SSL_free(ssl);        /* release connection state */
         }
         sleep(1);

@@ -218,6 +218,13 @@ void ShowCerts(SSL* ssl)
         printf("No certificates.\n");
 }
 
+void puteCent(char* ecent){
+    FILE *fw;
+    fw = fopen ("analystecents.txt", "a");
+    fprintf(fw,"%s\n", ecent);
+    fclose(fw);
+}
+
 char * Analyze(char *data)
 {
     char *solution = malloc(1000);
@@ -279,10 +286,11 @@ void Servlet(SSL *ssl,SSL *ssl2, int client, int bank) /* Serve the connection -
                 ERR_print_errors_fp(stderr);
             }
             SSL_free(ssl2);
-            if(strcmp(replybank,"") == 0){
+            if(strlen(replybank) == 0){
                 strcpy(replyclient, "invalid ecent");
             }
             else {
+                puteCent(replybank);
                 char * data = malloc(1024);
                 sprintf(data,"%s", bufclient);
                 strcpy(replyclient, Analyze(data));
@@ -293,6 +301,7 @@ void Servlet(SSL *ssl,SSL *ssl2, int client, int bank) /* Serve the connection -
         else
             ERR_print_errors_fp(stderr);
     }
+    replybank[0] = '\0';
     /* get socket connection */
     SSL_free(ssl);         /* release SSL state */
     close(client);          /* close connection */

@@ -122,41 +122,51 @@ char * createeCents(int ecentnum){
     fw = fopen ("bankecents.txt", "a");
     while(ecentnum > 0)
     {
-        char * ecent = malloc(32);
+        char * ecent = malloc(33);
         for (int n = 0; n < 32; n++) {
             int key = rand() % (int) (sizeof charset - 1);
             ecent[n] = charset[key];
         }
+        ecent[32] = '\0';
         fprintf(fw,"%s\n", ecent);
         sprintf(ecents,"%s%s ", ecents, ecent);
+        printf("progress: %s\n", ecents);
         ecentnum--;
     }
+    ecents[ecentnum*33-1] = '\0';
     fclose(fw);
+    printf("create ecents: %s\n", ecents);
     return ecents;
 }
 
 char * verifyeCent(char *ecent){
+    printf("ecent: %s\n", ecent);
     bool verified = false;
-    char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     char line[80];
     FILE *fr;
     FILE *fw;
     fr = fopen ("bankecents.txt", "rt");
-    fw = fopen ("newbankecents.txt", "wt");
+    fw = fopen ("newbankecents.txt", "w");
     while(fgets(line, 80, fr) != NULL)
     {
+        line[32] = '\0';
+        printf("-%s-\n", line);
+        printf("-%s-\n", ecent);
         if(strcmp(ecent, line) == 0){
             verified = true;
+            printf("match\n");
         }
         else{
-            fprintf(fw,"%s", line);
+            fprintf(fw,"%s\n", line);
         }
     }
     fclose(fw);
     fclose(fr);
     rename("newbankecents.txt", "bankecents.txt");
-    if(verified)
+    if(verified){
+        printf("-----create new ecent-----\n");
         return createeCents(1);
+    }
     else
         return "";
 }
@@ -184,9 +194,11 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
                 strcpy(reply, createeCents(ecentnum));
             }
             if(action == '1'){
+                printf("-----verify-----\n");
                 char* ecent = malloc(32);
                 strcpy(ecent, buf);
                 strcpy(reply, verifyeCent(ecent));
+                printf("new ecent: %s\n", reply);
             }
             //sprintf(reply, HTMLecho, buf);   /* construct reply */
 	    printf("Here is your message: ");
@@ -202,6 +214,7 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
  
 int main(int argc, char *argv[])
 {
+    remove("bankecents.txt");
     SSL_CTX *ctx;
     int server, localport;
  
