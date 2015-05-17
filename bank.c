@@ -130,17 +130,15 @@ char * createeCents(int ecentnum){
         ecent[32] = '\0';
         fprintf(fw,"%s\n", ecent);
         sprintf(ecents,"%s%s ", ecents, ecent);
-        printf("progress: %s\n", ecents);
+        printf("new ecent: %s\n", ecent);
         ecentnum--;
     }
     ecents[ecentnum*33-1] = '\0';
     fclose(fw);
-    printf("create ecents: %s\n", ecents);
     return ecents;
 }
 
 char * verifyeCent(char *ecent){
-    printf("ecent: %s\n", ecent);
     bool verified = false;
     char line[80];
     FILE *fr;
@@ -150,11 +148,8 @@ char * verifyeCent(char *ecent){
     while(fgets(line, 80, fr) != NULL)
     {
         line[32] = '\0';
-        printf("-%s-\n", line);
-        printf("-%s-\n", ecent);
         if(strcmp(ecent, line) == 0){
             verified = true;
-            printf("match\n");
         }
         else{
             fprintf(fw,"%s\n", line);
@@ -164,10 +159,11 @@ char * verifyeCent(char *ecent){
     fclose(fr);
     rename("newbankecents.txt", "bankecents.txt");
     if(verified){
-        printf("-----create new ecent-----\n");
+        printf("---eCent Confirmed---\n");
         return createeCents(1);
     }
     else
+        printf("---eCent Denied---\n");
         return "";
 }
 
@@ -190,18 +186,18 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
             memmove(buf, buf+1, strlen(buf));
             printf("Received message from Client: %s\n", buf);
             if(action == '0'){
+                printf("action: create %s eCents\n", buf);
                 int ecentnum = atoi(buf);
                 strcpy(reply, createeCents(ecentnum));
             }
             if(action == '1'){
-                printf("-----verify-----\n");
+                printf("verify eCent: %s\n", buf);
                 char* ecent = malloc(32);
                 strcpy(ecent, buf);
                 strcpy(reply, verifyeCent(ecent));
-                printf("new ecent: %s\n", reply);
             }
             //sprintf(reply, HTMLecho, buf);   /* construct reply */
-	    printf("Here is your message: ");
+	    printf("response: %s\n", reply);
             SSL_write(ssl, reply, strlen(reply)); /* send reply */
         }
         else

@@ -230,7 +230,6 @@ int main(int argc, char *argv[])
     int remainingecents = -1;
     
     while(1){
-        printf("remainingecents: %i\n", remainingecents);
         char msg[1024];
         bzero(msg,1024);
         ctx = InitCTX();
@@ -238,28 +237,29 @@ int main(int argc, char *argv[])
         if(i == 0){
             server = OpenConnection(bankhost, localport, bankport);
             if(remainingecents == -1){
-                printf("request number of ecents: ");
+                printf("request number of eCents: ");
                 char ecentreq[4];
                 fgets(ecentreq,4,stdin);
                 remainingecents = atoi(ecentreq);
+                printf("number of eCents to request: %d\n", remainingecents);
             }
-            printf("remainingecents: %i\n", remainingecents);
             if(remainingecents > 30){
+                printf("eCents requested: 30\n");
                 remainingecents -= 30;
-                printf("remainingecents: %i\n", remainingecents);
                 sprintf(msg,"%c%i",'0',30);
             }
             else{
+                printf("eCents requested: %i\n", remainingecents);
                 sprintf(msg,"%c%i",'0',remainingecents);
                 remainingecents = 0;
                 j = 1;
             }
+            printf("remaining eCents: %i\n", remainingecents);
         }
         else{
             printf("press enter to generate solution: ");
             fgets(msg,1024,stdin);
             strcpy(msg, geteCent());
-            printf("%lu\n", strlen(msg));
             if(strlen(msg) != 32){
                 printf("no eCents\n");
             }
@@ -276,14 +276,21 @@ int main(int argc, char *argv[])
         else
         {
             printf("Connected with %s encryption\n", SSL_get_cipher(ssl));
-            printf("sending %s\n", msg);
+            printf("sending: %s\n", msg);
             ShowCerts(ssl);        /* get any certs */
             SSL_write(ssl, msg, sizeof(msg));   /* encrypt & send message */
             bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
             buf[bytes] = 0;
-            printf("Received message from Server: %s\n", buf);
-            if(i == 0)
+            if(i == 0){
+                printf("eCents received: %s\n", buf);
                 puteCents(buf);
+            }
+            else{
+                if(strcmp(buf, "invalid eCent") == 0)
+                    printf("%s\n", buf);
+                else
+                    printf("solution: %s\n", buf);
+            }
             SSL_free(ssl);        /* release connection state */
         }
         sleep(1);

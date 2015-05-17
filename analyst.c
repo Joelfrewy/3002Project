@@ -1,6 +1,7 @@
 //SSL-Server.c
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <netdb.h>
 #include <errno.h>
 #include <unistd.h>
@@ -225,11 +226,22 @@ void puteCent(char* ecent){
     fclose(fw);
 }
 
+int isNumeric (const char * s)
+{
+    if (s == NULL || *s == '\0' || isspace(*s))
+        return 0;
+    char * p;
+    strtod (s, &p);
+    return *p == '\0';
+}
+
 char * Analyze(char *data)
 {
     char *solution = malloc(1000);
     char* line = strtok(data, " ");
     while (line) {
+        if(!isNumeric(line))
+            return "invalid data";
         if(atoi(line)>50)
             strcat(solution, "1");
         else
@@ -268,34 +280,32 @@ void Servlet(SSL *ssl,SSL *ssl2, int client, int bank) /* Serve the connection -
             ecent[32] = '\0';
             sprintf(sendtobank,"%c%s", '1',ecent);
             memmove(bufclient, bufclient+32, strlen(bufclient));
-            printf("%s\n", bufclient);
             if (SSL_connect(ssl2) == FAIL){
                 printf("SSL_connect fail\n");
                 ERR_print_errors_fp(stderr);
             }
             //sprintf(reply, HTMLecho, buf);   /* construct reply */
             ShowCerts(ssl2);
-            printf("Sending Message to Bank: %s\n", sendtobank);
+            printf("Sending eCent to Bank: %s\n", sendtobank);
             SSL_write(ssl2, sendtobank, sizeof(sendtobank));
             bytes2 = SSL_read(ssl2, replybank, sizeof(replybank)); /* get reply & decrypt */
-            if(bytes2 > 0){
+            if(bytes2 > 20){
                 replybank[bytes2] = 0;
-                printf("Received message from Bank %s\n", replybank);
-            }
-            else {
-                ERR_print_errors_fp(stderr);
-            }
-            SSL_free(ssl2);
-            if(strlen(replybank) == 0){
-                strcpy(replyclient, "invalid ecent");
-            }
-            else {
+                printf("---eCent confirmed---\n");
+                printf("eCent recieved from Bank: %s\n", replybank);
                 puteCent(replybank);
                 char * data = malloc(1024);
                 sprintf(data,"%s", bufclient);
+                printf("analyze: %s\n", bufclient);
                 strcpy(replyclient, Analyze(data));
-                printf("send to client: %s\n", replyclient);
+                printf("solution: %s\n", replyclient);
             }
+            else {
+                printf("---eCent confirmed---\n");
+                strcpy(replyclient, "invalid eCent");
+                ERR_print_errors_fp(stderr);
+            }
+            SSL_free(ssl2);
             SSL_write(ssl, replyclient, strlen(replyclient)); /* send reply */
         }
         else
@@ -310,6 +320,7 @@ void Servlet(SSL *ssl,SSL *ssl2, int client, int bank) /* Serve the connection -
 
 int main(int argc, char *argv[])
 {
+    remove("analystecents.txt");
     SSL_CTX *ctx;
     int server, listenport, connectport, proxyport, bankport;
     char *proxyhost;
