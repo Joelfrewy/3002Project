@@ -15,17 +15,63 @@
 #include <stdbool.h>
 #define FAIL    -1
 
+int OpenListener2(const char* host, const char* port)
+{   int sd;
+    int reuseaddr = 1;
+    struct addrinfo hints, *res;
+    /* Get the address info */
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    if (getaddrinfo(host, port, &hints, &res) != 0) {
+        perror("getaddrinfo");
+        return 1;
+    }
 
-int OpenListener(int port)
+    /* Create the socket */
+    sd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    if (sd == -1) {
+        perror("socket");
+        freeaddrinfo(res);
+        return 1;
+    }
+
+    /* Enable the socket to reuse the address */
+    if (setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(int)) == -1) {
+        perror("setsockopt");
+        freeaddrinfo(res);
+        return 1;
+    }
+
+    /* Bind to the address */
+    if (bind(sd, res->ai_addr, res->ai_addrlen) == -1) {
+        perror("bind");
+        freeaddrinfo(res);
+        return 1;
+    }
+
+    /* Listen */
+    if (listen(sd, 10) == -1) {
+        perror("listen");
+        freeaddrinfo(res);
+        return 1;
+    }
+
+    freeaddrinfo(res);
+    return sd;
+}
+
+/*
+int OpenListener(const char* host, int port)
 {   int sd;
     struct sockaddr_in addr;
  
-    sd = socket(PF_INET, SOCK_STREAM, 0);
+    sd = socket(AF_INET, SOCK_STREAM, 0);
     
     bzero(&addr, sizeof(addr));
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = INADDR_ANY;
+    addr.sin_addr.s_addr = gethostbyname(host);
 
     int yes = 1;
     if ( setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1 ){
@@ -36,13 +82,13 @@ int OpenListener(int port)
         perror("can't bind port");
         exit(1);
     }
-    if ( listen(sd, 0) != 0 )
+    if ( listen(sd, 5) != 0 )
     {
         perror("Can't configure listening port");
         exit(1);
     }
     return sd;
-}
+    }*/
  
 int isRoot()
 {
@@ -117,13 +163,15 @@ void ShowCerts(SSL* ssl)
 
 char * createeCents(int ecentnum){
     char * ecents = malloc(ecentnum*33);
+    ecents[0] = '\0';
     char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     FILE *fw;
     fw = fopen ("bankecents.txt", "a");
+    int n;
     while(ecentnum > 0)
     {
         char * ecent = malloc(33);
-        for (int n = 0; n < 32; n++) {
+        for (n = 0; n < 32; n++) {
             int key = rand() % (int) (sizeof charset - 1);
             ecent[n] = charset[key];
         }
@@ -171,6 +219,7 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
 {
     char buf[1024];
     char reply[1024];
+    char reply2[33000];
     int sd, bytes;
  
     if ( SSL_accept(ssl) == FAIL )     /* do SSL-protocol accept */
@@ -188,17 +237,18 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
             if(action == '0'){
                 printf("action: create %s eCents\n", buf);
                 int ecentnum = atoi(buf);
-                strcpy(reply, createeCents(ecentnum));
+		SSL_write(ssl, createeCents(ecentnum), ecentnum*33);
+		 printf("response: %s\n", reply2);
             }
             if(action == '1'){
                 printf("verify eCent: %s\n", buf);
                 char* ecent = malloc(32);
                 strcpy(ecent, buf);
                 strcpy(reply, verifyeCent(ecent));
+		SSL_write(ssl, reply, strlen(reply));
+		 printf("response: %s\n", reply);
             }
-            //sprintf(reply, HTMLecho, buf);   /* construct reply */
-	    printf("response: %s\n", reply);
-            SSL_write(ssl, reply, strlen(reply)); /* send reply */
+	   
         }
         else
             ERR_print_errors_fp(stderr);
@@ -212,17 +262,20 @@ int main(int argc, char *argv[])
 {
     remove("bankecents.txt");
     SSL_CTX *ctx;
-    int server, localport;
+    int server;
+    const char * localport;
+    const char * localhost;
  
-    if ( argc <= 1 ){
-        printf("Usage:server localport \n");
+    if ( argc < 2 ){
+        printf("Usage:server localhost localport \n");
         exit(0);
     }
     SSL_library_init();
-    localport = atoi(argv[1]);
+    localhost = argv[1];
+    localport = argv[2];
     ctx = InitServerCTX();        /* initialize SSL */
     LoadCertificates(ctx, "mycert2.pem", "mycert2.pem"); /* load certs */
-    server = OpenListener(localport);    /* create server socket */
+    server = OpenListener2(localhost, localport);    /* create server socket */
     while (1)
     {   struct sockaddr_in addr;
         socklen_t len = sizeof(addr);

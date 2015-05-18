@@ -212,6 +212,7 @@ int main(int argc, char **argv)
     int sock, port;
     struct addrinfo hints, *res;
     int reuseaddr = 1; /* True */
+    const char * boundhost;
     const char * host;
     const char * boundport;
     cindex = -1;
@@ -219,7 +220,7 @@ int main(int argc, char **argv)
 
     /* Get the server host and port from the command line */
     if (argc < 2) {
-        perror( "Usage: proxy boundport\n");
+        perror( "Usage: proxy boundhost boundport\n");
         return 1;
     }
  
@@ -228,13 +229,14 @@ int main(int argc, char **argv)
     memset(AnalystsPIDTYPE, -1, sizeof(AnalystsPIDTYPE[0][0])* 3 *MAX_ANALYSTS);
     memset(CollectorsPIDTYPE, -1, sizeof(CollectorsPIDTYPE[0][0])* 3 *MAX_COLLECTORS);
 
-    boundport = argv[1];
+    boundhost = argv[1];
+    boundport = argv[2];
 
     /* Get the address info */
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
-    if (getaddrinfo(NULL, boundport, &hints, &res) != 0) {
+    if (getaddrinfo(boundhost, boundport, &hints, &res) != 0) {
         perror("getaddrinfo");
         return 1;
     }

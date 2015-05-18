@@ -43,7 +43,7 @@ char * geteCent(){
 
 //prints string of ecents separated by spaces into file "ecents.txt"
 void puteCents(char* ecents){
-    char *ecentscpy = malloc(1000);
+    char *ecentscpy = malloc(33000);
     strcpy(ecentscpy, ecents);
     FILE *fw;
     fw = fopen ("ecents.txt", "a");
@@ -211,6 +211,7 @@ int main(int argc, char *argv[])
     int i = 0;
     SSL *ssl;
     char buf[1024];
+	char buf2[33000];
     int bytes;
     char *proxyhost;
     char *bankhost;
@@ -236,24 +237,24 @@ int main(int argc, char *argv[])
         int j = 0;
         if(i == 0){
             server = OpenConnection(bankhost, localport, bankport);
-            if(remainingecents == -1){
+            //if(remainingecents == -1){
                 printf("request number of eCents: ");
                 char ecentreq[4];
                 fgets(ecentreq,4,stdin);
                 remainingecents = atoi(ecentreq);
                 printf("number of eCents to request: %d\n", remainingecents);
-            }
-            if(remainingecents > 30){
+            //}
+            /*if(remainingecents > 30){
                 printf("eCents requested: 30\n");
                 remainingecents -= 30;
                 sprintf(msg,"%c%i",'0',30);
-            }
-            else{
+            }*/
+            //else{
                 printf("eCents requested: %i\n", remainingecents);
                 sprintf(msg,"%c%i",'0',remainingecents);
                 remainingecents = 0;
                 j = 1;
-            }
+            //}
             printf("remaining eCents: %i\n", remainingecents);
         }
         else{
@@ -279,13 +280,17 @@ int main(int argc, char *argv[])
             printf("sending: %s\n", msg);
             ShowCerts(ssl);        /* get any certs */
             SSL_write(ssl, msg, sizeof(msg));   /* encrypt & send message */
-            bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
-            buf[bytes] = 0;
+            
             if(i == 0){
-                printf("eCents received: %s\n", buf);
-                puteCents(buf);
+		bzero(buf2, 33000);
+		bytes = SSL_read(ssl, buf2, sizeof(buf2)); /* get reply & decrypt */
+            	buf2[bytes] = '\0';
+                printf("eCents received: %s\n", buf2);
+                puteCents(buf2);
             }
             else{
+		bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
+            	buf[bytes] = '\0';
                 if(strcmp(buf, "invalid eCent") == 0)
                     printf("%s\n", buf);
                 else
