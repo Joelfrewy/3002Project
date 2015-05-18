@@ -239,6 +239,7 @@ char * Analyze(char *data)
 {
     char *solution = malloc(1000);
     char* line = strtok(data, " ");
+    solution[0] = '\0';
     while (line) {
         if(!isNumeric(line))
             return "invalid data";
@@ -246,6 +247,7 @@ char * Analyze(char *data)
             strcat(solution, "1");
         else
             strcat(solution, "0");
+	solution[strlen(solution)] = '\0';
         line = strtok(NULL, " ");
     }
     return solution;
