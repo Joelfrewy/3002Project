@@ -234,28 +234,14 @@ int main(int argc, char *argv[])
         char msg[1024];
         bzero(msg,1024);
         ctx = InitCTX();
-        int j = 0;
         if(i == 0){
-            server = OpenConnection(bankhost, localport, bankport);
-            //if(remainingecents == -1){
-                printf("request number of eCents: ");
-                char ecentreq[4];
-                fgets(ecentreq,4,stdin);
-                remainingecents = atoi(ecentreq);
-                printf("number of eCents to request: %d\n", remainingecents);
-            //}
-            /*if(remainingecents > 30){
-                printf("eCents requested: 30\n");
-                remainingecents -= 30;
-                sprintf(msg,"%c%i",'0',30);
-            }*/
-            //else{
-                printf("eCents requested: %i\n", remainingecents);
-                sprintf(msg,"%c%i",'0',remainingecents);
-                remainingecents = 0;
-                j = 1;
-            //}
-            printf("remaining eCents: %i\n", remainingecents);
+            printf("request number of eCents: ");
+            char ecentreq[4];
+            fgets(ecentreq,4,stdin);
+            remainingecents = atoi(ecentreq);
+            printf("number of eCents to request: %d\n", remainingecents);
+            sprintf(msg,"%c%i",'0',remainingecents);
+	        server = OpenConnection(bankhost, localport, bankport);
         }
         else{
             printf("press enter to generate solution: ");
@@ -268,7 +254,6 @@ int main(int argc, char *argv[])
                 strcat(msg, getData());
                 server = OpenConnection(proxyhost, localport, proxyport);
             }
-            j = 1;
         }
         ssl = SSL_new(ctx);      /* create new SSL connection state */
         SSL_set_fd(ssl, server);    /* attach the socket descriptor */
@@ -301,7 +286,7 @@ int main(int argc, char *argv[])
         sleep(1);
         close(server);         /* close socket */
         SSL_CTX_free(ctx);        /* release context */
-        i += j;
+        i++;
     }
     return 0;
 }
