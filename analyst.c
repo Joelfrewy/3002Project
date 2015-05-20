@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include <netdb.h>
 #include <errno.h>
+#include <time.h>
 #include <unistd.h>
 #include <string.h>
 #include <arpa/inet.h>
@@ -235,21 +236,31 @@ int isNumeric (const char * s)
     return *p == '\0';
 }
 
+void wait(unsigned int secs){
+    int endtime = time(0) + secs;
+    while(time(0) < endtime);
+}
+
 char * Analyze(char *data)
 {
+    printf("solving...\n");
+    double n = 1;
+    double average = 0;
     char *solution = malloc(1000);
     char* line = strtok(data, " ");
     solution[0] = '\0';
     while (line) {
         if(!isNumeric(line))
             return "invalid data";
-        if(atoi(line)>50)
-            strcat(solution, "1");
-        else
-            strcat(solution, "0");
-	solution[strlen(solution)] = '\0';
-        line = strtok(NULL, " ");
+        else{
+            average = (average * (n-1) + atoi(line))/n;
+	    sprintf(solution, "%.1lf", average);
+	    //solution[strlen(solution)] = '\0';
+            line = strtok(NULL, " ");
+	}
+	n++;
     }
+    wait(6);
     return solution;
 }
 
@@ -303,7 +314,7 @@ void Servlet(SSL *ssl,SSL *ssl2, int client, int bank) /* Serve the connection -
                 printf("solution: %s\n", replyclient);
             }
             else {
-                printf("---eCent confirmed---\n");
+                printf("---eCent denied---\n");
                 strcpy(replyclient, "invalid eCent");
                 ERR_print_errors_fp(stderr);
             }

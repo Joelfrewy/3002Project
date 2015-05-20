@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 #include <sys/socket.h>
 #include <resolv.h>
 #include <netdb.h>
@@ -199,8 +200,26 @@ void ShowCerts(SSL* ssl)
         printf("No certificates.\n");
 }
 
+void wait(unsigned int secs){
+    int endtime = time(0) + secs;
+    while(time(0) < endtime);
+}
+
 char *getData(){
-    return "70 67 2 4 98";
+    int n = 0;
+    char *data = malloc(20);
+    data[0] = '\0';
+    while(n < 5){
+	wait(2);
+	int number = rand()%100+1;
+	printf("\t%i\n", number);
+	sprintf(data, "%s %i", data, number);
+	n++;
+    }
+    printf("\n");
+    wait(2);
+    data[strlen(data)] = '\0';
+    return data;
 }
 
 int main(int argc, char *argv[])
@@ -228,24 +247,22 @@ int main(int argc, char *argv[])
     bankhost = argv[4];
     bankport = atoi(argv[5]);
     registrationrequest(localport, proxyhost, proxyport);
-    int remainingecents = -1;
+    int requestedecents = 1000;
     
     while(1){
         char msg[1024];
         bzero(msg,1024);
         ctx = InitCTX();
         if(i == 0){
-            printf("request number of eCents: ");
-            char ecentreq[4];
-            fgets(ecentreq,4,stdin);
-            remainingecents = atoi(ecentreq);
-            printf("number of eCents to request: %d\n", remainingecents);
-            sprintf(msg,"%c%i",'0',remainingecents);
+            printf("\nrequested number of eCents: \n");
+	    wait(3);
+	    printf("\t%i\n", requestedecents);
+	    wait(3);
+            sprintf(msg,"%c%i",'0',requestedecents);
 	        server = OpenConnection(bankhost, localport, bankport);
         }
         else{
-            printf("press enter to generate solution: ");
-            fgets(msg,1024,stdin);
+            printf("\ninput:\n");
             strcpy(msg, geteCent());
             if(strlen(msg) != 32){
                 printf("no eCents\n");
@@ -257,8 +274,10 @@ int main(int argc, char *argv[])
         }
         ssl = SSL_new(ctx);      /* create new SSL connection state */
         SSL_set_fd(ssl, server);    /* attach the socket descriptor */
-        if ( SSL_connect(ssl) == FAIL )   /* perform the connection */
+        if ( SSL_connect(ssl) == FAIL ){   /* perform the connection */
             ERR_print_errors_fp(stderr);
+	    printf("connection error\n");
+	}
         else
         {
             printf("Connected with %s encryption\n", SSL_get_cipher(ssl));
@@ -277,9 +296,9 @@ int main(int argc, char *argv[])
 		bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
             	buf[bytes] = '\0';
                 if(strcmp(buf, "invalid eCent") == 0)
-                    printf("%s\n", buf);
+                    printf("\n%s\n", buf);
                 else
-                    printf("solution: %s\n", buf);
+                    printf("\naverage: %s\n", buf);
             }
             SSL_free(ssl);        /* release connection state */
         }

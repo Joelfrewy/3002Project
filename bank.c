@@ -237,8 +237,9 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
             if(action == '0'){
                 printf("action: create %s eCents\n", buf);
                 int ecentnum = atoi(buf);
-		SSL_write(ssl, createeCents(ecentnum), ecentnum*33);
-		 printf("response: %s\n", reply2);
+		strcpy(reply2, createeCents(ecentnum));
+		printf("response: %s\n", reply2);
+		SSL_write(ssl, reply2, ecentnum*33);
             }
             if(action == '1'){
                 printf("verify eCent: %s\n", buf);
