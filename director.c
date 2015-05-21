@@ -49,7 +49,10 @@ void pipehandle( int readpipefd, const char* host, int port){
 	}
 	else if( inbuf1 == 1){
 		aindex++;
-		AnalystsAddr[aindex] = host;
+		char *hostcopy = malloc(100);
+		strcpy(hostcopy, host);
+		AnalystsAddr[aindex] = hostcopy;
+		//printf("Host is %s\n", AnalystAddr[aindex]);
 		AnalystsPIDTYPE[0][aindex] = port;
 		AnalystsPIDTYPE[2][aindex] = inbuf2;
 		AnalystsPIDTYPE[1][aindex] = 0;
