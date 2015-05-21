@@ -162,7 +162,7 @@ void ShowCerts(SSL* ssl)
 
 
 char * createeCents(int ecentnum){
-    char * ecents = malloc(ecentnum*33);
+    char ecents[ecentnum*33];
     ecents[0] = '\0';
     char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     FILE *fw;
@@ -170,7 +170,7 @@ char * createeCents(int ecentnum){
     int n;
     while(ecentnum > 0)
     {
-        char * ecent = malloc(33);
+        char ecent[33];
         for (n = 0; n < 32; n++) {
             int key = rand() % (int) (sizeof charset - 1);
             ecent[n] = charset[key];
@@ -180,9 +180,12 @@ char * createeCents(int ecentnum){
         sprintf(ecents,"%s%s ", ecents, ecent);
         printf("new ecent: %s\n", ecent);
         ecentnum--;
+	printf("at: %i\n", 1000-ecentnum);
     }
+    printf("error here!!\n");
     ecents[ecentnum*33-1] = '\0';
     fclose(fw);
+    printf("file closed\n");
     return ecents;
 }
 
@@ -220,6 +223,7 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
     char buf[1024];
     char reply[1024];
     char reply2[33000];
+    reply[0] = '\0';
     int sd, bytes;
  
     if ( SSL_accept(ssl) == FAIL )     /* do SSL-protocol accept */

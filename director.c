@@ -31,7 +31,7 @@ int cindex, aindex;
 
 void pipehandle( int readpipefd, const char* host, int port){
 	char inbuffer[4];
-	bzero(inbuffer, 4);
+	//bzero(inbuffer, 4);
 	if(read( readpipefd,inbuffer, 4 )==-1){
 		perror("Error reading pipehandle\n");
 	}
@@ -45,7 +45,7 @@ void pipehandle( int readpipefd, const char* host, int port){
 		CollectorsAddr[cindex] = host;
 		CollectorsPIDTYPE[0][cindex] = port;
 		CollectorsPIDTYPE[2][cindex] = inbuf2;
-		printf("Collector was Registered at Host: %s Port: %d of Type: %d\n", host, port, inbuf1);		
+		printf("Collector was Registered at Host: %s Port: %d of Type: %d / %c \n", host, port, inbuf2, inbuffer[1]);		
 	}
 	else if( inbuf1 == 1){
 		aindex++;
@@ -53,7 +53,7 @@ void pipehandle( int readpipefd, const char* host, int port){
 		AnalystsPIDTYPE[0][aindex] = port;
 		AnalystsPIDTYPE[2][aindex] = inbuf2;
 		AnalystsPIDTYPE[1][aindex] = 0;
-		printf("Analyst was Registered at Host: %s Port: %d of Type: %d\n", host, port, inbuffer[1]);
+		printf("Analyst was Registered at Host: %s Port: %d of Type: %d / %c \n", host, port, inbuf2, inbuffer[1]);
 	}
 	else {
 		perror("Error: Could not read registration packet");
@@ -105,14 +105,28 @@ int isregistered( const char *host, int port){
 	}
 	return -1;
 }
+
+int getType(const char *host, int port)
+{
+	int j = 0;
+	for( j = 0; j< MAX_COLLECTORS; j++){
+		if(CollectorsPIDTYPE[0][j] == port){
+			if(strncmp(CollectorsAddr[j], host, strlen(host)) == 0){
+				return CollectorsPIDTYPE[2][j];
+			}
+		}
+	}
+	return -1;
+}
+
 	 
 
-int choose()
+int choose(int type)
 {
     int i;
     for(i=0 ; i< MAX_ANALYSTS; i++){
-	if(AnalystsPIDTYPE[1][i] == 0){
-		printf("Analyst chosen was Host: %s Port: %d at index %d\n",AnalystsAddr[i], AnalystsPIDTYPE[0][i], i);
+	if((AnalystsPIDTYPE[1][i] == 0)&&(AnalystsPIDTYPE[2][i]==type)){
+		printf("Analyst chosen was Host: %s Port: %d of type %d at index %d \n",AnalystsAddr[i], AnalystsPIDTYPE[0][i], type, i);
 		return i;
 	}
     }
@@ -209,7 +223,7 @@ void registeredhandle(int client, const char *host, int port)
 
 int main(int argc, char **argv)
 {
-    int sock, port;
+    int sock, port, type;
     struct addrinfo hints, *res;
     int reuseaddr = 1; /* True */
     const char * boundhost;
@@ -309,7 +323,11 @@ int main(int argc, char **argv)
 	registered = isregistered(newsockhost, newsockport);
 	//printf("after register\n");
 	if(registered == 0){
-		index = choose();
+		type = getType(newsockhost, newsockport);
+		if( type == -1){
+			perror("getType");
+		}
+		index = choose(type);
 		if(index == -1){
 			perror("choose");
 		}

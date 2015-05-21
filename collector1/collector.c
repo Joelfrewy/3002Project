@@ -56,7 +56,7 @@ void puteCents(char* ecents){
     fclose(fw);
 }
 
-void registrationrequest(int localport, char* proxyhost, int proxyport ){
+void registrationrequest(int type, int localport, char* proxyhost, int proxyport ){
    int sockfd;
    struct sockaddr_in local_addr, proxy_addr;
    struct hostent *server;
@@ -92,9 +92,10 @@ void registrationrequest(int localport, char* proxyhost, int proxyport ){
    proxy_addr.sin_port = htons(proxyport);
 	
    char outbuf[4];
-   bzero(outbuf, 4);
-   outbuf[0] = '0';
-   outbuf[1] = '0';
+
+   outbuf[0] = '\0';
+   sprintf(outbuf, "0%i", type);
+   printf( "outbuf is %s\n", outbuf);
    bzero(buffer,1024);
    	/* Now connect to the server */
    if (connect(sockfd, (struct sockaddr*)&proxy_addr, sizeof(proxy_addr)) < 0){
@@ -226,7 +227,7 @@ int main(int argc, char *argv[])
 {
     remove("ecents.txt");
     SSL_CTX *ctx;
-    int server, localport, proxyport, bankport;
+    int type, server, localport, proxyport, bankport;
     int i = 0;
     SSL *ssl;
     char buf[1024];
@@ -235,18 +236,19 @@ int main(int argc, char *argv[])
     char *proxyhost;
     char *bankhost;
     
-    if ( argc <5 )
+    if ( argc <6 )
     {
-        printf("usage: localport proxyhost proxyport bankhost bankport \n");
+        printf("usage: type localport proxyhost proxyport bankhost bankport \n");
         exit(0);
     }
     SSL_library_init();
-    localport=atoi(argv[1]);
-    proxyhost=argv[2];
-    proxyport = atoi(argv[3]);
-    bankhost = argv[4];
-    bankport = atoi(argv[5]);
-    registrationrequest(localport, proxyhost, proxyport);
+    type = atoi(argv[1]);
+    localport=atoi(argv[2]);
+    proxyhost=argv[3];
+    proxyport = atoi(argv[4]);
+    bankhost = argv[5];
+    bankport = atoi(argv[6]);
+    registrationrequest(type, localport, proxyhost, proxyport);
     int requestedecents = 1000;
     
     while(1){

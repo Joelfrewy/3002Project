@@ -56,7 +56,7 @@ int OpenConnection(const char *hostname, int clientport, int serverport)
     return sd;		
 }
 
-void registrationrequest(int localport, char* proxyhost, int proxyport ){
+void registrationrequest(int type, int localport, char* proxyhost, int proxyport ){
    int sockfd;
    struct sockaddr_in local_addr, proxy_addr;
    struct hostent *server;
@@ -92,9 +92,8 @@ void registrationrequest(int localport, char* proxyhost, int proxyport ){
    proxy_addr.sin_port = htons(proxyport);
 	
    char outbuf[4];
-   bzero(outbuf, 4);
-   outbuf[0] = '1';
-   outbuf[1] = '0';
+   outbuf[0] = '\0';
+   sprintf(outbuf, "1%i", type);
    bzero(buffer,1024);
    	/* Now connect to the server */
    if (connect(sockfd, (struct sockaddr*)&proxy_addr, sizeof(proxy_addr)) < 0){
@@ -122,32 +121,52 @@ void registrationrequest(int localport, char* proxyhost, int proxyport ){
    close(sockfd);
 }
  
-int OpenListener(int port)
-{   int sd;
-    struct sockaddr_in addr;
- 
-    sd = socket(PF_INET, SOCK_STREAM, 0);
-    
-    bzero(&addr, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = INADDR_ANY;
+int OpenListener(const char* host, const char* port)
+{  
+   int sd;
+    int reuseaddr = 1;
+    struct addrinfo hints, *res;
+    /* Get the address info */
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    if (getaddrinfo(host, port, &hints, &res) != 0) {
+        perror("getaddrinfo");
+        return 1;
+    }
 
-    int yes = 1;
-    if ( setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1 ){
-     	perror("setsockopt");
+    /* Create the socket */
+    sd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    if (sd == -1) {
+        perror("socket");
+        freeaddrinfo(res);
+        return 1;
     }
-    if ( bind(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0 )
-    {
-        perror("can't bind port");
-        exit(1);
+
+    /* Enable the socket to reuse the address */
+    if (setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(int)) == -1) {
+        perror("setsockopt");
+        freeaddrinfo(res);
+        return 1;
     }
-    if ( listen(sd, 0) != 0 )
-    {
-        perror("Can't configure listening port");
-        exit(1);
+
+    /* Bind to the address */
+    if (bind(sd, res->ai_addr, res->ai_addrlen) == -1) {
+        perror("bind");
+        freeaddrinfo(res);
+        return 1;
     }
+
+    /* Listen */
+    if (listen(sd, 10) == -1) {
+        perror("listen");
+        freeaddrinfo(res);
+        return 1;
+    }
+
+    freeaddrinfo(res);
     return sd;
+  
 }
  
 int isRoot()
@@ -335,25 +354,28 @@ int main(int argc, char *argv[])
 {
     remove("analystecents.txt");
     SSL_CTX *ctx;
-    int server, listenport, connectport, proxyport, bankport;
+    int  type, server, connectport, proxyport, bankport;
+    const char *listenport;
+    const char *listenhost;
     char *proxyhost;
     char *bankhost;
     
-    if ( argc < 6 ){
-        printf("Usage:server listenport connectport proxyhost proxyport bankhost bankport\n");
+    if ( argc < 8 ){
+        printf("Usage:server type listenhost listenport connectport proxyhost proxyport bankhost bankport\n");
         exit(0);
     }
     SSL_library_init();
-    
-    listenport = atoi(argv[1]);
-    connectport = atoi(argv[2]);
-    proxyhost = argv[3];
-    proxyport = atoi(argv[4]);
-    bankhost = argv[5];
-    bankport = atoi(argv[6]);
+    type = atoi(argv[1]);
+    listenhost = argv[2];
+    listenport = argv[3];
+    connectport = atoi(argv[4]);
+    proxyhost = argv[5];
+    proxyport = atoi(argv[6]);
+    bankhost = argv[7];
+    bankport = atoi(argv[8]);
     ctx = InitServerCTX();        /* initialize SSL */
-    registrationrequest( listenport, proxyhost, proxyport);
-    server = OpenListener(listenport);    /* create server socket */
+    registrationrequest(type, atoi(listenport), proxyhost, proxyport);
+    server = OpenListener(listenhost, listenport);    /* create server socket */
     while (1)
     {   struct sockaddr_in addr;
         socklen_t len = sizeof(addr);
