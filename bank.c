@@ -15,7 +15,8 @@
 #include <stdbool.h>
 #define FAIL    -1
 
-int OpenListener2(const char* host, const char* port)
+/*based on martin broadhursts tcp proxy code*/
+int OpenListener(const char* host, const char* port)
 {   int sd;
     int reuseaddr = 1;
     struct addrinfo hints, *res;
@@ -61,47 +62,6 @@ int OpenListener2(const char* host, const char* port)
     return sd;
 }
 
-/*
-int OpenListener(const char* host, int port)
-{   int sd;
-    struct sockaddr_in addr;
- 
-    sd = socket(AF_INET, SOCK_STREAM, 0);
-    
-    bzero(&addr, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = gethostbyname(host);
-
-    int yes = 1;
-    if ( setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1 ){
-     	perror("setsockopt");
-    }
-    if ( bind(sd, (struct sockaddr*)&addr, sizeof(addr)) != 0 )
-    {
-        perror("can't bind port");
-        exit(1);
-    }
-    if ( listen(sd, 5) != 0 )
-    {
-        perror("Can't configure listening port");
-        exit(1);
-    }
-    return sd;
-    }*/
- 
-int isRoot()
-{
-    if (getuid() != 0)
-    {
-        return 0;
-    }
-    else
-    {
-        return 1;
-    }
- 
-}
 SSL_CTX* InitServerCTX(void)
 {   SSL_METHOD *method;
     SSL_CTX *ctx;
@@ -139,12 +99,13 @@ void LoadCertificates(SSL_CTX* ctx, char* CertFile, char* KeyFile)
         abort();
     }
 }
- 
+
+/*get certificates if possible*/
 void ShowCerts(SSL* ssl)
 {   X509 *cert;
     char *line;
  
-    cert = SSL_get_peer_certificate(ssl); /* Get certificates (if available) */
+    cert = SSL_get_peer_certificate(ssl);
     if ( cert != NULL )
     {
         printf("Server certificates:\n");
@@ -160,7 +121,9 @@ void ShowCerts(SSL* ssl)
         printf("No certificates.\n");
 }
 
-
+/*recieves a requested number of ecents to create
+  generates strings of 32 random characters which are added to bankecents.txt
+  each ecent is appended to a large string separated by spaces and returned*/
 char * createeCents(int ecentnum){
     char ecents[ecentnum*33];
     ecents[0] = '\0';
@@ -180,15 +143,16 @@ char * createeCents(int ecentnum){
         sprintf(ecents,"%s%s ", ecents, ecent);
         printf("new ecent: %s\n", ecent);
         ecentnum--;
-	printf("at: %i\n", 1000-ecentnum);
     }
-    printf("error here!!\n");
     ecents[ecentnum*33-1] = '\0';
     fclose(fw);
-    printf("file closed\n");
     return ecents;
 }
 
+/*checks that an ecent matches a previously made request
+  function opens bankecents.txt, a list of every active ecent,
+  if the corresponding ecent is found remove it from the file 
+  and create and return a new one*/
 char * verifyeCent(char *ecent){
     bool verified = false;
     char line[80];
@@ -234,6 +198,9 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
         bytes = SSL_read(ssl, buf, sizeof(buf)); /* get request */
         if ( bytes > 0 )
         {
+            /*separate buf into parts: 
+                first char: action (which function to be performed)
+                remaining chars: input for function*/
             buf[bytes] = 0;
             char action = buf[0];
             memmove(buf, buf+1, strlen(buf));
@@ -241,26 +208,26 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
             if(action == '0'){
                 printf("action: create %s eCents\n", buf);
                 int ecentnum = atoi(buf);
-		strcpy(reply2, createeCents(ecentnum));
-		printf("response: %s\n", reply2);
-		SSL_write(ssl, reply2, ecentnum*33);
+                strcpy(reply2, createeCents(ecentnum));
+                printf("response: %s\n", reply2);
+                SSL_write(ssl, reply2, ecentnum*33);
             }
-            if(action == '1'){
+            else {
                 printf("verify eCent: %s\n", buf);
                 char* ecent = malloc(32);
                 strcpy(ecent, buf);
                 strcpy(reply, verifyeCent(ecent));
-		SSL_write(ssl, reply, strlen(reply));
-		 printf("response: %s\n", reply);
+                SSL_write(ssl, reply, strlen(reply));
+                printf("response: %s\n", reply);
             }
 	   
         }
         else
             ERR_print_errors_fp(stderr);
     }
-    sd = SSL_get_fd(ssl);       /* get socket connection */
-    SSL_free(ssl);         /* release SSL state */
-    close(sd);          /* close connection */
+    sd = SSL_get_fd(ssl);
+    SSL_free(ssl);
+    close(sd);
 }
  
 int main(int argc, char *argv[])
@@ -280,7 +247,7 @@ int main(int argc, char *argv[])
     localport = argv[2];
     ctx = InitServerCTX();        /* initialize SSL */
     LoadCertificates(ctx, "mycert2.pem", "mycert2.pem"); /* load certs */
-    server = OpenListener2(localhost, localport);    /* create server socket */
+    server = OpenListener(localhost, localport);    /* create server socket */
     while (1)
     {   struct sockaddr_in addr;
         socklen_t len = sizeof(addr);
