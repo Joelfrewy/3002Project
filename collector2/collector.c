@@ -9,9 +9,10 @@
 #include <netdb.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <signal.h>
  
 #define FAIL    -1
-
+	
 
 //returns and removes first ecent from ecent.txt
 char * geteCent(){
@@ -251,6 +252,7 @@ int main(int argc, char *argv[])
     registrationrequest(type, localport, proxyhost, proxyport);
     int requestedecents = 1000;
     
+    
     while(1){
         char msg[1024];
         bzero(msg,1024);
@@ -290,6 +292,11 @@ int main(int argc, char *argv[])
             if(i == 0){
 		bzero(buf2, 33000);
 		bytes = SSL_read(ssl, buf2, sizeof(buf2)); /* get reply & decrypt */
+		if(bytes < 1) 
+		{
+			printf("Exit read error from Bank\n");
+			exit(1);
+		}
             	buf2[bytes] = '\0';
                 printf("eCents received: %s\n", buf2);
                 puteCents(buf2);
@@ -297,6 +304,11 @@ int main(int argc, char *argv[])
             else{
 		bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
             	buf[bytes] = '\0';
+		if(bytes < 1) 
+		{
+			printf("Exit: read error from Analyst\n");
+			exit(1);
+		}
                 if(strcmp(buf, "invalid eCent") == 0)
                     printf("\n%s\n", buf);
                 else

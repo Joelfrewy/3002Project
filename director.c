@@ -142,7 +142,7 @@ unsigned int transfer(int from, int to)
     unsigned int disconnected = 0;
     size_t bytes_read, bytes_written;
     bytes_read = read(from, buf, BUF_SIZE);
-    if (bytes_read == 0) {
+    if (bytes_read < 5) {
         disconnected = 1;
     }
     else {
@@ -151,7 +151,7 @@ unsigned int transfer(int from, int to)
             disconnected = 1;
         }
 	else {
-		    printf("\n (NSA) Redirected message: %s\n", buf);
+		    printf("\n (NSA) Redirected message: %s%i\n", buf, bytes_read);
 	}
     }
     return disconnected;
