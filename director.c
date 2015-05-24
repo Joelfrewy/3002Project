@@ -1,11 +1,11 @@
 /* 
- *  A simple TCP proxy
- *  by Martin Broadhurst (www.martinbroadhurst.com)
+ *  Based on proxy code by Martin Broadhurst
+ *  
  */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h> /* memset() */
+#include <string.h> 
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -16,12 +16,11 @@
 #include <sys/mman.h>
 
 
-#define PORT     "32002" /* Port to listen on */
-#define BACKLOG  10      /* Passed to listen() */
-#define BUF_SIZE 4096    /* Buffer for  transfers */
-#define MAX_ANALYSTS 10
-#define MAX_COLLECTORS 10
-#define MAX_EITHER 10
+
+#define BUF_SIZE 4096  
+#define MAX_ANALYSTS 10 /* Maximum number of analysts */
+#define MAX_COLLECTORS 10 /* Maximum number of collectors */
+#define MAX_EITHER 10 /* Max of either */
 
 const char *AnalystsAddr[MAX_ANALYSTS];
 const char *CollectorsAddr[MAX_COLLECTORS]; /* I hate passing Globals but I needed to */
@@ -29,42 +28,41 @@ int AnalystsPIDTYPE[3][MAX_ANALYSTS];
 int CollectorsPIDTYPE[3][MAX_COLLECTORS];
 int cindex, aindex;
 
+/*Handles the pipe for the registration request process */
+
 void pipehandle( int readpipefd, const char* host, int port){
 	char inbuffer[4];
-	//bzero(inbuffer, 4);
 	if(read( readpipefd,inbuffer, 4 )==-1){
 		perror("Error reading pipehandle\n");
 	}
-
 	int inbuf1 = inbuffer[0] - 48;
 	int inbuf2 = inbuffer[1] - 48;
-	//printf("do I still exist?\n");
 	printf("Player is : %c\n", inbuffer[0]);
 	if(inbuf1 == 0){
 		cindex++;
 		CollectorsAddr[cindex] = host;
 		CollectorsPIDTYPE[0][cindex] = port;
 		CollectorsPIDTYPE[2][cindex] = inbuf2;
-		printf("Collector was Registered at Host: %s Port: %d of Type: %d / %c \n", host, port, inbuf2, inbuffer[1]);		
+		printf("Collector was Registered at Host: %s Port: %d of Type: %d\n", host, port, inbuf2);		
 	}
 	else if( inbuf1 == 1){
 		aindex++;
 		char *hostcopy = malloc(100);
 		strcpy(hostcopy, host);
 		AnalystsAddr[aindex] = hostcopy;
-		//printf("Host is %s\n", AnalystAddr[aindex]);
 		AnalystsPIDTYPE[0][aindex] = port;
 		AnalystsPIDTYPE[2][aindex] = inbuf2;
 		AnalystsPIDTYPE[1][aindex] = 0;
-		printf("Analyst was Registered at Host: %s Port: %d of Type: %d / %c \n", host, port, inbuf2, inbuffer[1]);
+		printf("Analyst was Registered at Host: %s Port: %d of Type: %d\n", host, port, inbuf2);
 	}
 	else {
 		perror("Error: Could not read registration packet");
 	}
-	//printf("Player is : %c\n", inbuffer[0]);
 	close(readpipefd);
 }
 
+
+/* Unregistered connections are handled */
 void unregisteredhandle( int sockfd, int writepipefd){
 	char inbuffer[4];
 	char outbuffer[1024];
@@ -83,13 +81,12 @@ void unregisteredhandle( int sockfd, int writepipefd){
 	close(writepipefd);
 	close(sockfd);
 } 
-
+/* Checks if connection is registered */
 int isregistered( const char *host, int port){
 	int j = 0;
 	int registered = -1;
 	for( j = 0; j< MAX_COLLECTORS; j++){
 		if(CollectorsPIDTYPE[0][j] == port){
-			//printf("Same Port! Host is %s and Registered host is %s\n", host, CollectorsAddr[j] );
 			if(strncmp(CollectorsAddr[j], host, strlen(host)) == 0){
 				return 0;
 				printf("Registered Collector\n");
@@ -108,7 +105,7 @@ int isregistered( const char *host, int port){
 	}
 	return -1;
 }
-
+/* gets the type from the Registered connection */
 int getType(const char *host, int port)
 {
 	int j = 0;
@@ -123,7 +120,7 @@ int getType(const char *host, int port)
 }
 
 	 
-
+/* Chooses the Analyst based on available Analysts and type */
 int choose(int type)
 {
     int i;
@@ -135,7 +132,7 @@ int choose(int type)
     }
     return -1;
 }
-
+/* Proxy Transfer code  based on Martin Broadhurst code*/
 unsigned int transfer(int from, int to)
 {
     char buf[BUF_SIZE];
@@ -151,12 +148,12 @@ unsigned int transfer(int from, int to)
             disconnected = 1;
         }
 	else {
-		    printf("\n (NSA) Redirected message: %s%i\n", buf, bytes_read);
+		    printf("\n (NSA) Redirected message: %s\n", buf);
 	}
     }
     return disconnected;
 }
-
+/* Proxy registered handle code, based on Martin broadhurst code */
 void registeredhandle(int client, const char *host, int port)
 {
     struct addrinfo hints, *res;
@@ -164,7 +161,6 @@ void registeredhandle(int client, const char *host, int port)
     unsigned int disconnected = 0;
     fd_set set;
     unsigned int max_sock;
-    //printf("handle 1\n");
     char buf[32];
     sprintf(buf, "%d", port);
     /* Get the address info */
@@ -184,7 +180,6 @@ void registeredhandle(int client, const char *host, int port)
         close(client);
         return;
     }
-    //printf("handle 2\n");
     /* Connect to the host */
     if (connect(server, res->ai_addr, res->ai_addrlen) == -1) {
         perror("connect");
@@ -198,7 +193,6 @@ void registeredhandle(int client, const char *host, int port)
     else {
         max_sock = server;
     }
-    //printf("handle 3\n");
     /* Main transfer loop */
     while (!disconnected) {
         FD_ZERO(&set);
@@ -228,19 +222,20 @@ int main(int argc, char **argv)
 {
     int sock, port, type;
     struct addrinfo hints, *res;
-    int reuseaddr = 1; /* True */
+    int reuseaddr = 1; 
     const char * boundhost;
     const char * host;
     const char * boundport;
     cindex = -1;
     aindex = -1;
 
-    /* Get the server host and port from the command line */
+    /* Gets the listening host and port*/
     if (argc < 2) {
         perror( "Usage: proxy boundhost boundport\n");
         return 1;
     }
  
+    /* memsets global arrays */
     memset(AnalystsAddr, 0, MAX_ANALYSTS);
     memset(CollectorsAddr, 0, MAX_ANALYSTS);
     memset(AnalystsPIDTYPE, -1, sizeof(AnalystsPIDTYPE[0][0])* 3 *MAX_ANALYSTS);
@@ -281,7 +276,7 @@ int main(int argc, char **argv)
     }
 
     /* Listen */
-    if (listen(sock, BACKLOG) == -1) {
+    if (listen(sock, 5) == -1) {
         perror("listen");
         freeaddrinfo(res);
         return 1;
@@ -292,7 +287,7 @@ int main(int argc, char **argv)
     /* Ignore broken pipe signal */
     signal(SIGPIPE, SIG_IGN);
  
-    /* Main loop */
+    /* Loop for accepting new connections*/
     while (1) {
         unsigned int size = sizeof(struct sockaddr_in);
         struct sockaddr_in their_addr;
@@ -303,15 +298,12 @@ int main(int argc, char **argv)
 	struct timeval tv = {0,0};
 	FD_ZERO(&fdset);
 	FD_SET(sock, &fdset);
-	//printf("Before Select\n");
+	/* selects readable connections */
 	if (select(maxfd + 1, &fdset, NULL, NULL, &tv) < 0) {
-	    //printf("what am I doing here???");
             perror("select");
             break;
         }
-	//printf("before Accept loop\n");
 	if(FD_ISSET(sock, &fdset)){
-	//printf("you're in the accept loop!\n");
         int newsock = accept(sock, (struct sockaddr*)&their_addr, &size);
 	if (newsock == -1) {
             perror("accept");
@@ -322,14 +314,15 @@ int main(int argc, char **argv)
 	pid = -1;
         int pipefd[2];
 	
-
+	/* checks if new connection is registered */
 	registered = isregistered(newsockhost, newsockport);
-	//printf("after register\n");
+	/* if connection is a registered collector choose analyst*/
 	if(registered == 0){
 		type = getType(newsockhost, newsockport);
 		if( type == -1){
 			perror("getType");
 		}
+		/* chooses analyst based on type */
 		index = choose(type);
 		if(index == -1){
 			perror("choose");
@@ -337,11 +330,13 @@ int main(int argc, char **argv)
 		host = AnalystsAddr[index];
 		port = AnalystsPIDTYPE[0][index];
 	}
+	/* creates pipe to get data from registrationrequest process */
 	else if (registered == -1){
 		if ( pipe(pipefd) == -1){
 			perror("pipe");
 		}
 	}
+	/* Forks connection as new process */
         if(newsock!=-1) {
    		pid = fork();
       		if (pid < 0)
@@ -352,7 +347,7 @@ int main(int argc, char **argv)
       
       		if (pid == 0)
          	{
-         	/* This is the client process */
+         	/* child process */
          		close(sock);
          		printf("Got a connection from %s on port %d\n", inet_ntoa(their_addr.sin_addr), htons(their_addr.sin_port));
 			if(registered == 0){
@@ -364,11 +359,12 @@ int main(int argc, char **argv)
                 int i = 1;
 				wait(&i);
 			}
-			//printf("I'm exiting now\n");
          		exit(0);
        		  }
       		else {
+			/* main process */
 			close(newsock);
+			/* reads from socket */
 			if( registered == -1){
 				close(pipefd[1]);
 				pipehandle(pipefd[0], newsockhost, newsockport);
@@ -376,17 +372,19 @@ int main(int argc, char **argv)
 			if ( registered == 0){
 				AnalystsPIDTYPE[1][index] = pid;
 			}
+			/*prints PID of new connection */
 			printf("PID is: %d\n", pid);
 		}
         }
 	}
-		//printf("listen to me you git\n");
 		int status, exitpid, i;
+		/* waits for connection to end  and prints process id upon exit */
 		exitpid = waitpid (-1, &status, WNOHANG);
 		if(exitpid<0){
 			//perror("waitpid");
 		}
 		if(exitpid>0){
+		/* chances PID of Analyst in PIDTYPE back to 0 so analyst can be reused */
 			printf("Process exited, PID is : %d\n", exitpid);
 			for(i = 0; i< MAX_ANALYSTS; i++){
 				if(AnalystsPIDTYPE[1][i] == exitpid){

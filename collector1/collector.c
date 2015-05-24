@@ -1,4 +1,4 @@
-//SSL-Client.c
+
 #include <stdio.h>
 #include <errno.h>
 #include <unistd.h>
@@ -9,14 +9,13 @@
 #include <netdb.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
-#include <signal.h>
  
 #define FAIL    -1
 	
 
-//returns and removes first ecent from ecent.txt
+/*Returns and removes first ecent from ecent.txt */
 char * geteCent(){
-    if( access( "ecents.txt", F_OK ) == -1 ) {  //check if ecents.txt exists
+    if( access( "ecents.txt", F_OK ) == -1 ) {  /* check if ecents.txt exists */
         return "";
     }
     int i = 0;
@@ -43,7 +42,7 @@ char * geteCent(){
     return ecent;
 }
 
-//prints string of ecents separated by spaces into file "ecents.txt"
+/* prints string of ecents separated by spaces into file "ecents.txt" */
 void puteCents(char* ecents){
     char *ecentscpy = malloc(33000);
     strcpy(ecentscpy, ecents);
@@ -57,6 +56,7 @@ void puteCents(char* ecents){
     fclose(fw);
 }
 
+/*registration request sends a registration request to the Director */
 void registrationrequest(int type, int localport, char* proxyhost, int proxyport ){
    int sockfd;
    struct sockaddr_in local_addr, proxy_addr;
@@ -64,7 +64,7 @@ void registrationrequest(int type, int localport, char* proxyhost, int proxyport
    
    char buffer[1024];
    
-   /* Create a socket point */
+   /* Create socket  */
    sockfd = socket(AF_INET, SOCK_STREAM, 0);
    
    if (sockfd < 0){
@@ -95,35 +95,33 @@ void registrationrequest(int type, int localport, char* proxyhost, int proxyport
    char outbuf[4];
 
    outbuf[0] = '\0';
+   /* Send 0 (Collector) and type */
    sprintf(outbuf, "0%i", type);
    printf( "outbuf is %s\n", outbuf);
    bzero(buffer,1024);
-   	/* Now connect to the server */
+   	/* Connect to Director */
    if (connect(sockfd, (struct sockaddr*)&proxy_addr, sizeof(proxy_addr)) < 0){
-    	  perror("ERROR connecting to proxy");
+    	  perror("ERROR connecting to director");
     	  exit(1);
    	}
-   
-   /* Now ask for a message from the user, this message
-   * will be read by server
-   */
 
    
-   /* Send message to the server */
+   /* Send message to director */
    if(write(sockfd, outbuf, 4)<0){
 	perror("Socket write error");
 	exit(1);
    }
    
-   /* Now read server response */
+   /* Read Director response */
    if(read(sockfd, buffer, 1023)<0){
       perror("Socket write error");
       exit(1);
    }
-   printf("Received message from Proxy: %s\n",buffer);
+   printf("Received message from Director: %s\n",buffer);
    close(sockfd);
 }
 
+/* creates socket and opens connection from collector to director */
 int OpenConnection(const char *hostname, int clientport, int serverport)
 {   int sd;
     struct hostent *host;
@@ -165,7 +163,7 @@ int OpenConnection(const char *hostname, int clientport, int serverport)
     }
     return sd;
 }
- 
+ /* Based on SSL_Tutorial code from http://simplestcodings.blogspot.com.au/2010/08/secure-server-client-using-openssl-in-c.html */
 SSL_CTX* InitCTX(void)
 {   SSL_METHOD *method;
     SSL_CTX *ctx;
@@ -182,6 +180,7 @@ SSL_CTX* InitCTX(void)
     return ctx;
 }
  
+/* Based on SSL_Tutorial code from http://simplestcodings.blogspot.com.au/2010/08/secure-server-client-using-openssl-in-c.html */
 void ShowCerts(SSL* ssl)
 {   X509 *cert;
     char *line;
@@ -206,7 +205,7 @@ void wait(unsigned int secs){
     int endtime = time(0) + secs;
     while(time(0) < endtime);
 }
-
+/*generates data */
 char *getData(){
     int n = 0;
     char *data = malloc(20);
@@ -226,6 +225,7 @@ char *getData(){
 
 int main(int argc, char *argv[])
 {
+    /* deletes existeng ecents */
     remove("ecents.txt");
     SSL_CTX *ctx;
     int type, server, localport, proxyport, bankport;
@@ -242,6 +242,7 @@ int main(int argc, char *argv[])
         printf("usage: type localport proxyhost proxyport bankhost bankport \n");
         exit(0);
     }
+    /* initialises SSL library and copies line arguments */
     SSL_library_init();
     type = atoi(argv[1]);
     localport=atoi(argv[2]);
@@ -276,9 +277,10 @@ int main(int argc, char *argv[])
                 server = OpenConnection(proxyhost, localport, proxyport);
             }
         }
-        ssl = SSL_new(ctx);      /* create new SSL connection state */
-        SSL_set_fd(ssl, server);    /* attach the socket descriptor */
-        if ( SSL_connect(ssl) == FAIL ){   /* perform the connection */
+	/* creates ssl context and sets socket to it*/
+        ssl = SSL_new(ctx);      
+        SSL_set_fd(ssl, server);   
+        if ( SSL_connect(ssl) == -1 ){  
             ERR_print_errors_fp(stderr);
 	    printf("connection error\n");
 	}
@@ -286,12 +288,14 @@ int main(int argc, char *argv[])
         {
             printf("Connected with %s encryption\n", SSL_get_cipher(ssl));
             printf("sending: %s\n", msg);
-            ShowCerts(ssl);        /* get any certs */
-            SSL_write(ssl, msg, sizeof(msg));   /* encrypt & send message */
+            ShowCerts(ssl);  
+		/* Write to Bank to verify ecent */  
+            SSL_write(ssl, msg, sizeof(msg));  
             
             if(i == 0){
 		bzero(buf2, 33000);
-		bytes = SSL_read(ssl, buf2, sizeof(buf2)); /* get reply & decrypt */
+		/* Read from Bank, confirm verification*/
+		bytes = SSL_read(ssl, buf2, sizeof(buf2)); 
 		if(bytes < 1) 
 		{
 			printf("Exit read error from Bank\n");
@@ -302,6 +306,7 @@ int main(int argc, char *argv[])
                 puteCents(buf2);
             }
             else{
+		/* Reads from Collector*/
 		bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
             	buf[bytes] = '\0';
 		if(bytes < 1) 
@@ -314,11 +319,11 @@ int main(int argc, char *argv[])
                 else
                     printf("\naverage: %s\n", buf);
             }
-            SSL_free(ssl);        /* release connection state */
+            SSL_free(ssl);        
         }
         sleep(1);
-        close(server);         /* close socket */
-        SSL_CTX_free(ctx);        /* release context */
+        close(server);         
+        SSL_CTX_free(ctx);       
         i++;
     }
     return 0;

@@ -1,4 +1,3 @@
-//SSL-Server.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -239,6 +238,7 @@ void ShowCerts(SSL* ssl)
         printf("No certificates.\n");
 }
 
+/*deposit ecent into analystecents.txt file*/
 void puteCent(char* ecent){
     FILE *fw;
     fw = fopen ("analystecents.txt", "a");
@@ -246,6 +246,7 @@ void puteCent(char* ecent){
     fclose(fw);
 }
 
+/*checks whether character array is made up of numbers*/
 int isNumeric (const char * s)
 {
     if (s == NULL || *s == '\0' || isspace(*s))
@@ -255,11 +256,14 @@ int isNumeric (const char * s)
     return *p == '\0';
 }
 
+/*wait for variable amount of seconds*/
 void wait(unsigned int secs){
     int endtime = time(0) + secs;
     while(time(0) < endtime);
 }
 
+/*analyze string of numbers separated by spaces
+  returns the average of the numbers as a string*/
 char * Analyze(char *data)
 {
     printf("solving...\n");
@@ -269,12 +273,12 @@ char * Analyze(char *data)
     char* line = strtok(data, " ");
     solution[0] = '\0';
     while (line) {
+        /*if the data has non-numeric characters in it*/
         if(!isNumeric(line))
             return "invalid data";
         else{
             average = (average * (n-1) + atoi(line))/n;
 	    sprintf(solution, "%.1lf", average);
-	    //solution[strlen(solution)] = '\0';
             line = strtok(NULL, " ");
 	}
 	n++;
@@ -310,17 +314,18 @@ void Servlet(SSL *ssl,SSL *ssl2, int client, int bank) /* Serve the connection -
             char *ecent = malloc(33);
             memcpy(ecent,bufclient, 32);
             ecent[32] = '\0';
+            /*add action prefix for bank (1 = verify coin)*/
             sprintf(sendtobank,"%c%s", '1',ecent);
             memmove(bufclient, bufclient+32, strlen(bufclient));
             if (SSL_connect(ssl2) == FAIL){
                 printf("SSL_connect fail\n");
                 ERR_print_errors_fp(stderr);
             }
-            //sprintf(reply, HTMLecho, buf);   /* construct reply */
             ShowCerts(ssl2);
             printf("Sending eCent to Bank: %s\n", sendtobank);
             SSL_write(ssl2, sendtobank, sizeof(sendtobank));
             bytes2 = SSL_read(ssl2, replybank, sizeof(replybank)); /* get reply & decrypt */
+            /*check if response message is 32 chars (ecent) or 0(error)*/
             if(bytes2 > 20){
                 replybank[bytes2] = 0;
                 printf("---eCent confirmed---\n");
